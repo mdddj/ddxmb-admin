@@ -44,10 +44,14 @@ export default (): React.ReactNode => {
           pathname: '/blog/preview',
           search: '?id=' + obj.id
         }}>预览</Link>,
-        <a key="edit" onClick={() => {
-        }}>
+        <Link key={'editKey'} to={
+          {
+            pathname: '/blog/write',
+            search: '?id=' + obj.id
+          }
+        }>
           编辑
-        </a>,
+        </Link>,
         <a
           key="edit"
           onClick={() => {

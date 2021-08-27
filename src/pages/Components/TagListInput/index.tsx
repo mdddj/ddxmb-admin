@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Button, Input, Tag } from 'antd';
 import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
+// @ts-ignore
 import { useRequest } from '@@/plugin-request/request';
 import { getBlogTags } from '@/services/blog';
 
@@ -8,8 +9,7 @@ import { getBlogTags } from '@/services/blog';
  * 标签列表的编辑组件
  * @constructor
  */
-const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void }> = ({ onChange }) => {
-  const [tag, setTags] = useState<string[]>([]);
+const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void, value: string[] }> = ({ onChange,value }) => {
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [showServerTags, setShowServerTags] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
@@ -31,11 +31,10 @@ const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void }> = ({ onC
    * 输入框回车键按下事件
    */
   const handleInputConfirm = () => {
-    let tags = tag;
-    if (inputValue !== '' && tag.indexOf(inputValue) === -1) {
+    let tags = value;
+    if (inputValue !== '' && value.indexOf(inputValue) === -1) {
       tags = [...tags, inputValue];
     }
-    setTags(tags);
     setInputVisible(false);
     setInputValue('');
     setShowServerTags(false);
@@ -47,27 +46,26 @@ const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void }> = ({ onC
    * @param str 文本
    */
   const insetValue = (str: string) => {
-    let tags = tag;
-    if (tag.indexOf(str) === -1) {
+    let tags = value;
+    if (value.indexOf(str) === -1) {
       tags = [...tags, str];
     }
-    setTags(tags);
     onChange(tags);
   };
 
   /**
    * 标签被移除
-   * @param value
+   * @param v 要删除的标签
    */
-  const closeTag = (value: string) => {
-    const tags = tag.filter((item) => item !== value);
-    setTags(tags);
+  const closeTag = (v: string) => {
+    const tags = value.filter((item) => item !== v);
+    onChange(tags);
   };
 
   return (
     <div>
       {/* 已添加的标签列表 */}
-      {tag.map((item) => (
+      {value.map((item) => (
         <Tag
           key={item}
           closable={true}

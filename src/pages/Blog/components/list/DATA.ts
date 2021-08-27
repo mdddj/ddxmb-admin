@@ -32,6 +32,8 @@ export interface BlogObject {
   category: Category;
   author: string;
   thumbnail?: string;
+  alias?: string
+  tags: BlogTag[]
 }
 
 export interface Category {
@@ -40,6 +42,12 @@ export interface Category {
   logo: string;
   intro: string;
   createTime: number;
+}
+
+
+export interface BlogTag {
+  id: number,
+  name: string
 }
 //
 // // Converts JSON strings to/from your types
