@@ -39,10 +39,22 @@
       },
       {
         path: '/blog/preview',
-        name: '预览',
+        name: '博客预览',
         icon: 'preview',
-        component: './Blog/subpage/BlogPreview'
-      }
+        component: './Blog/subpage/BlogPreview',
+      },
+    ],
+  },
+  {
+    path: '/text',
+    name: '字典',
+    routes: [
+      {
+        path: '/text/list',
+        name: '列表',
+        icon: 'preview',
+        component: './Text/List',
+      },
     ],
   },
   {
