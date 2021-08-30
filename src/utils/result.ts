@@ -20,3 +20,12 @@ export interface PagerModel {
 export const responseIsSuccess: (result: Result<any>) => boolean = (result: Result<any>) => {
   return result.state === 200;
 };
+
+export const ParseResultToProTable = (result: Result<any>) => {
+  return {
+    data: result.data.list,
+    success: responseIsSuccess(result),
+    total: result.data.page.total,
+    current: result.data.page.currentPage,
+  };
+};

@@ -7,7 +7,6 @@ import routes from './routes';
 export default defineConfig({
   hash: true,
   antd: {},
-  // mfsu: {},
   dva: {
     hmr: true,
   },
