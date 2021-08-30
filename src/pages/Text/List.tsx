@@ -67,7 +67,7 @@ const TextList: React.FC = () => {
               新增
             </Button>,
           ]}
-        ></ProTable>
+        />
       </Card>
     </PageContainer>
   );
