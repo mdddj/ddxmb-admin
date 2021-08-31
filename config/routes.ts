@@ -51,7 +51,7 @@
     routes: [
       {
         path: '/text/list',
-        name: '列表',
+        name: '字典列表',
         icon: 'preview',
         component: './Text/List',
       },

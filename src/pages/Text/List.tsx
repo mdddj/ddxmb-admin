@@ -8,8 +8,12 @@ import { ParseResultToProTable, simpleHandleResultMessage } from '@/utils/result
 import { PlusOutlined } from '@ant-design/icons';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
+import MarkdownPreview from '@/widgets/MarkdownPreview';
 
-const columns = (onEdit: (model: TextModel) => void): ProColumns<TextModel>[] => [
+const columns = (
+  onEdit: (model: TextModel) => void,
+  onPreview?: (model: TextModel) => void,
+): ProColumns<TextModel>[] => [
   {
     title: '关键字',
     dataIndex: 'name',
@@ -34,11 +38,11 @@ const columns = (onEdit: (model: TextModel) => void): ProColumns<TextModel>[] =>
   {
     title: '操作',
     valueType: 'option',
-    render: (text, record, _, action) => [
+    render: (text, record, _, __) => [
       <a key="editable" onClick={() => onEdit(record)}>
         编辑
       </a>,
-      <a target="_blank" rel="noopener noreferrer" key="view">
+      <a target="_blank" rel="noopener noreferrer" key="view" onClick={() => onPreview?.(record)}>
         查看
       </a>,
     ],
@@ -51,10 +55,11 @@ const TextList: React.FC = () => {
   const { setFalse, setTrue, state } = useBoolean(false);
   const [editText, setEditText] = useState<TextModel>();
   const [markdown, setMarkdown] = useState<string>('');
+  const [previewContent, setPreviewContent] = useState<string>('');
   const [form] = Form.useForm();
 
   // 加载数据
-  const fetchData = async (params: any, sort: any, filter: any) => {
+  const fetchData = async (params: any, _: any, __: any) => {
     const name = params.name;
     const result = await getTextList(params.current - 1, params.pageSize, name);
     return ParseResultToProTable(result);
@@ -69,9 +74,11 @@ const TextList: React.FC = () => {
     }
     const text = values as TextModel;
     text.context = markdown;
+    if (editText) {
+      text.id = editText.id;
+    }
     const result = await saveText(text);
-    await simpleHandleResultMessage<TextModel>(result, (result) => {
-      console.log('添加成功');
+    await simpleHandleResultMessage<TextModel>(result, (_) => {
       setFalse();
       actionRef.current?.reload();
     });
@@ -91,13 +98,18 @@ const TextList: React.FC = () => {
     form.setFieldsValue({ intro: edit.intro });
   };
 
+  // 预览
+  const onPreview = (text: TextModel) => {
+    setPreviewContent(text.context);
+  };
+
   return (
     <PageContainer title={'字典列表'}>
       <Card>
         <ProTable<TextModel>
           actionRef={actionRef}
           rowKey={'id'}
-          columns={columns(onEdit)}
+          columns={columns(onEdit, onPreview)}
           request={fetchData}
           pagination={{ pageSize: 10 }}
           toolBarRender={() => [
@@ -144,6 +156,7 @@ const TextList: React.FC = () => {
           </Form.Item>
         </Form>
       </Modal>
+      <MarkdownPreview content={previewContent} onClose={() => setPreviewContent('')} />
     </PageContainer>
   );
 };
