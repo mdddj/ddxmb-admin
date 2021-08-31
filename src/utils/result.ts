@@ -1,3 +1,5 @@
+import { message } from 'antd';
+
 export interface Result<T> {
   state: number;
   message: string;
@@ -17,9 +19,23 @@ export interface PagerModel {
  * 判断请求是否成功
  * @param result  服务器返回的数据
  */
-export const responseIsSuccess: (result: Result<any>) => boolean = (result: Result<any>) => {
+export function responseIsSuccess<T>(result: Result<T>) {
   return result.state === 200;
-};
+}
+
+/**
+ * 简单处理服务器的消息
+ * @param result  服务器返回的数据
+ * @param success 操作成功返回的数据
+ */
+export async function simpleHandleResultMessage<T>(result: Result<T>, success?: (data: T) => void) {
+  if (responseIsSuccess<T>(result)) {
+    message.success(result.message);
+    success && success(result.data);
+  } else {
+    message.error(result.message);
+  }
+}
 
 export const ParseResultToProTable = (result: Result<any>) => {
   return {
