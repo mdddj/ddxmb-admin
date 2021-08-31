@@ -3,7 +3,7 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import { Avatar, Button, Card } from 'antd';
 import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
-import { ParseResultToProTable } from '@/utils/result';
+import { antdTableParamAsT, ParseResultToProTable } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
 import { GetResourceCategoryList } from '@/services/res_service';
 
@@ -50,8 +50,7 @@ const ResourcesCategoryIndex: React.FC<{}> = () => {
   // 加载数据
   const fetchDataList = async (params: any, _: any, __: any) => {
     const param = coverAntdPageParamModelToRequestParam(params);
-    console.log(param);
-    const result = await GetResourceCategoryList(param);
+    const result = await GetResourceCategoryList(param, antdTableParamAsT<ResCategory>(params));
     return ParseResultToProTable<ResCategory>(result);
   };
 

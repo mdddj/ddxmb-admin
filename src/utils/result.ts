@@ -40,7 +40,7 @@ export async function simpleHandleResultMessage<T>(result: Result<T>, success?: 
 
 /**
  * 使用实例
-    const fetchDataList = async (params: any, _: any, __: any) => {
+ const fetchDataList = async (params: any, _: any, __: any) => {
     const param = coverAntdPageParamModelToRequestParam(params);
     const result = await GetResourceCategoryList(param);
     return ParseResultToProTable<ResCategory>(result)  // <<<<<---------------这里
@@ -55,4 +55,32 @@ export const ParseResultToProTable = <T>(result: Result<any>): AntdTableResultDa
     total: result.data.page.total,
     current: result.data.page.currentPage,
   } as AntdTableResultData<T>;
+};
+
+/**
+ *
+ * 将查询参数转成对象类型
+ *
+ * 去除了 current 参数
+ * 去除了value为空的参数
+ *
+ * 使用示例
+ *  const fetchDataList = async (params: any, _: any, __: any) => {
+    const param = coverAntdPageParamModelToRequestParam(params);
+    const result = await GetResourceCategoryList(param,antdTableParamAsT(params)); // <<<<<---------------这里
+    return ParseResultToProTable<ResCategory>(result);
+  };
+ *
+ * @param params
+ */
+export const antdTableParamAsT = <T>(params: any) => {
+  if (params.current) {
+    delete params.current;
+  }
+  for (let key in params) {
+    if (params[key] === '') {
+      delete params[key];
+    }
+  }
+  return params as T;
 };
