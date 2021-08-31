@@ -38,3 +38,16 @@ export async function saveText(text: TextModel): Promise<Result<TextModel>> {
     data: text,
   });
 }
+
+/**
+ * 根据id删除某个标签,需要管理员权限
+ * @param id 主键
+ */
+export async function deleteTextById(id: string) {
+  return request<Result<string>>('/api/text/delete', {
+    data: {
+      id,
+    },
+    method: 'DELETE',
+  });
+}

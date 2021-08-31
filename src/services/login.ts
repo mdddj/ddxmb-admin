@@ -12,6 +12,9 @@ export async function fakeAccountLogin(params: LoginParamsType) {
   });
 }
 
+/**
+ * 用户退出登录
+ */
 export async function outLogin() {
-  return request('/api/login/outLogin');
+  return request('/api/user/logout', { method: 'POST' });
 }
