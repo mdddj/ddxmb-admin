@@ -24,6 +24,7 @@
   {
     path: '/blog',
     name: '文章管理',
+    icon: 'FolderOutlined',
     routes: [
       {
         path: '/blog/list',
@@ -46,8 +47,26 @@
     ],
   },
   {
+    path: '/category',
+    name: '分类管理',
+    icon: 'NotificationOutlined',
+    routes: [
+      {
+        path: '/category/blog/list',
+        name: '博客分类',
+        component: './Category/BlogCategory/index',
+      },
+      {
+        path: '/category/res/list',
+        name: '群组',
+        component: './Category/ResourcesCategory/index',
+      },
+    ],
+  },
+  {
     path: '/text',
     name: '字典',
+    icon: 'KeyOutlined',
     routes: [
       {
         path: '/text/list',
@@ -60,6 +79,7 @@
   {
     path: '/app',
     name: '应用管理',
+    icon: 'AppstoreOutlined',
     routes: [
       {
         path: '/app/aplay',

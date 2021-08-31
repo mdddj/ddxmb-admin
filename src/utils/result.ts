@@ -1,4 +1,5 @@
 import { message } from 'antd';
+import { AntdTableResultData } from '@/entrys/PageModel';
 
 export interface Result<T> {
   state: number;
@@ -37,11 +38,21 @@ export async function simpleHandleResultMessage<T>(result: Result<T>, success?: 
   }
 }
 
-export const ParseResultToProTable = (result: Result<any>) => {
+/**
+ * 使用实例
+    const fetchDataList = async (params: any, _: any, __: any) => {
+    const param = coverAntdPageParamModelToRequestParam(params);
+    const result = await GetResourceCategoryList(param);
+    return ParseResultToProTable<ResCategory>(result)  // <<<<<---------------这里
+  }
+ * @param result
+ * @constructor
+ */
+export const ParseResultToProTable = <T>(result: Result<any>): AntdTableResultData<T> => {
   return {
-    data: result.data.list,
+    data: result.data.list as T[],
     success: responseIsSuccess(result),
     total: result.data.page.total,
     current: result.data.page.currentPage,
-  };
+  } as AntdTableResultData<T>;
 };

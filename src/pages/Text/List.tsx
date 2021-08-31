@@ -4,7 +4,7 @@ import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { TextModel } from '@/pages/Text/model';
 import { Card, Form, Input, Button, Modal, message } from 'antd';
 import { getTextList, saveText } from '@/services/text';
-import { ParseResultToProTable, simpleHandleResultMessage } from '@/utils/result';
+import { responseIsSuccess, simpleHandleResultMessage } from '@/utils/result';
 import { PlusOutlined } from '@ant-design/icons';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
@@ -62,7 +62,12 @@ const TextList: React.FC = () => {
   const fetchData = async (params: any, _: any, __: any) => {
     const name = params.name;
     const result = await getTextList(params.current - 1, params.pageSize, name);
-    return ParseResultToProTable(result);
+    return {
+      data: result.data.list,
+      success: responseIsSuccess(result),
+      total: result.data.page.total,
+      current: result.data.page.currentPage,
+    };
   };
 
   // 提交表单
