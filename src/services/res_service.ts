@@ -41,3 +41,15 @@ export async function SaveOrUpdateResourceCategory(category: ResCategory) {
     data: category,
   });
 }
+
+/**
+ * 根据id删除某个群组
+ * @param category  群组数据, 后台只会取id删除
+ * @constructor
+ */
+export async function DeleteResourceCategoryById(category: ResCategory) {
+  return request('/api/res/delete', {
+    method: 'DELETE',
+    data: category,
+  });
+}

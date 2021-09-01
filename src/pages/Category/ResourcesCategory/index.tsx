@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import ProTable, { ProColumns } from '@ant-design/pro-table';
-import { Avatar, Button, Card, Drawer, Form, Input } from 'antd';
+import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
+import { Avatar, Button, Card, Drawer, Form, Input, Popconfirm } from 'antd';
 import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
 import {
   antdTableParamAsT,
@@ -9,13 +9,20 @@ import {
   simpleHandleResultMessage,
 } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
-import { GetResourceCategoryList, SaveOrUpdateResourceCategory } from '@/services/res_service';
+import {
+  DeleteResourceCategoryById,
+  GetResourceCategoryList,
+  SaveOrUpdateResourceCategory,
+} from '@/services/res_service';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import MarginRight from '@/widgets/MarginRight';
 
 /// 列结构
-const columns = (): ProColumns<ResCategory>[] => [
+const columns = (
+  onEdit: (category: ResCategory) => void,
+  onDelete?: (data: ResCategory) => void,
+): ProColumns<ResCategory>[] => [
   {
     title: '群组名',
     dataIndex: 'name',
@@ -50,6 +57,24 @@ const columns = (): ProColumns<ResCategory>[] => [
     title: '类型',
     dataIndex: 'type',
   },
+  {
+    title: '操作',
+    valueType: 'option',
+    render: (_, data) => [
+      <a key={'edit'} onClick={() => onEdit?.(data)}>
+        编辑
+      </a>,
+      <Popconfirm
+        title={'如果该群组下存在资源没有被清理,将会删除失败. 确定删除该群组吗? '}
+        onConfirm={() => {
+          onDelete?.(data);
+        }}
+        key={'del'}
+      >
+        <a>删除</a>
+      </Popconfirm>,
+    ],
+  },
 ];
 
 /**
@@ -60,6 +85,9 @@ const ResourcesCategoryIndex: React.FC = () => {
   const { state, setFalse, setTrue } = useBoolean(false);
   const [markdown, setMarkdown] = useState<string>('');
   const [adding, setAdding] = useState<boolean>(false);
+  const [updateResCategory, setUpdateResCategory] = useState<ResCategory>();
+  const tableRef = useRef<ActionType>();
+  const [form] = Form.useForm();
 
   // 加载数据
   const fetchDataList = async (params: any, _: any, __: any) => {
@@ -71,10 +99,29 @@ const ResourcesCategoryIndex: React.FC = () => {
   // 提交数据
   const submit = async (values: any) => {
     setAdding(true);
-    console.log(values);
-    const result = await SaveOrUpdateResourceCategory(values as ResCategory);
-    await simpleHandleResultMessage(result);
+    const object = values as ResCategory;
+    object.description = markdown;
+    if (updateResCategory) object.id = updateResCategory.id;
+    const result = await SaveOrUpdateResourceCategory(object);
+    await simpleHandleResultMessage(result, () => {
+      setFalse(); // 关闭抽屉
+      tableRef?.current?.reload(); // 刷新表格
+    });
     setAdding(false);
+  };
+
+  // 编辑
+  const onEdit = (resCategory: ResCategory) => {
+    setTrue(); // 开启抽屉
+    setMarkdown(resCategory.description);
+    form.setFieldsValue(resCategory);
+    setUpdateResCategory(resCategory);
+  };
+
+  // 删除
+  const onDelete = async (category: ResCategory) => {
+    const result = await DeleteResourceCategoryById(category);
+    await simpleHandleResultMessage(result);
   };
 
   return (
@@ -82,16 +129,29 @@ const ResourcesCategoryIndex: React.FC = () => {
       <PageContainer title={'群组管理'}>
         <Card>
           <ProTable<ResCategory>
-            columns={columns()}
+            columns={columns(onEdit, onDelete)}
             request={fetchDataList}
             rowKey={'id'}
+            actionRef={tableRef}
             toolBarRender={() => {
               return [<Button onClick={setTrue}>新增群组</Button>];
             }}
           />
         </Card>
-        <Drawer visible={state} title={'新增分类'} width={720} onClose={setFalse}>
-          <Form layout={'vertical'} onFinish={submit}>
+        <Drawer
+          visible={state}
+          title={updateResCategory ? '修改群组信息' : '新增群组'}
+          width={720}
+          onClose={() => {
+            setFalse();
+            if (updateResCategory) {
+              setUpdateResCategory(undefined);
+              form.resetFields();
+              setMarkdown('');
+            }
+          }}
+        >
+          <Form layout={'vertical'} onFinish={submit} form={form}>
             <Form.Item
               label={'群组名'}
               name={'name'}
@@ -137,7 +197,7 @@ const ResourcesCategoryIndex: React.FC = () => {
             </Form.Item>
             <Form.Item>
               <Button htmlType={'submit'} type={'primary'} loading={adding}>
-                提交
+                {updateResCategory ? '修改群组信息' : '创建群组'}
               </Button>
               <MarginRight />
               <Button onClick={setFalse}>取消</Button>

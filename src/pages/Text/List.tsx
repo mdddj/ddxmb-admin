@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { TextModel } from '@/pages/Text/model';
-import { Card, Form, Input, Button, Modal, message } from 'antd';
+import { Card, Form, Input, Button, message, Drawer } from 'antd';
 import { getTextList, saveText } from '@/services/text';
 import { responseIsSuccess, simpleHandleResultMessage } from '@/utils/result';
 import { PlusOutlined } from '@ant-design/icons';
@@ -96,11 +96,10 @@ const TextList: React.FC = () => {
 
   // 编辑
   const onEdit = (edit: TextModel) => {
+    setTrue();
     contentChange(edit.context);
     setEditText(edit);
-    setTrue();
-    form.setFieldsValue({ name: edit.name });
-    form.setFieldsValue({ intro: edit.intro });
+    form.setFieldsValue(edit);
   };
 
   // 预览
@@ -124,12 +123,12 @@ const TextList: React.FC = () => {
           ]}
         />
       </Card>
-      <Modal
+      <Drawer
         visible={state}
-        onCancel={() => {
-          setFalse();
+        onClose={() => {
           setEditText(undefined);
           setMarkdown('');
+          setFalse();
         }}
         title={'新增'}
         footer={null}
@@ -160,7 +159,7 @@ const TextList: React.FC = () => {
             </Button>
           </Form.Item>
         </Form>
-      </Modal>
+      </Drawer>
       <MarkdownPreview content={previewContent} onClose={() => setPreviewContent('')} />
     </PageContainer>
   );
