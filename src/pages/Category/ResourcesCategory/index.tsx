@@ -121,7 +121,9 @@ const ResourcesCategoryIndex: React.FC = () => {
   // 删除
   const onDelete = async (category: ResCategory) => {
     const result = await DeleteResourceCategoryById(category);
-    await simpleHandleResultMessage(result);
+    await simpleHandleResultMessage(result, () => {
+      tableRef?.current?.reload();
+    });
   };
 
   return (
