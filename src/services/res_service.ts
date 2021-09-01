@@ -29,3 +29,15 @@ export async function GetResourceCategoryList(
     params: merge(pageModel, resCategory),
   });
 }
+
+/**
+ * 添加或者修改一个资源分类分页
+ * @param category  分类
+ * @constructor
+ */
+export async function SaveOrUpdateResourceCategory(category: ResCategory) {
+  return request('/api/res/save', {
+    method: 'POST',
+    data: category,
+  });
+}

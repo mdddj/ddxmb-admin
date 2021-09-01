@@ -20,11 +20,13 @@ const columns = (): ProColumns<ResCategory>[] => [
     render: (_, data) => {
       return <Avatar src={data.logo} />;
     },
+    search: false,
   },
   {
     title: '介绍',
     dataIndex: 'description',
     ellipsis: true,
+    search: false,
   },
   {
     title: '置顶公告',
@@ -35,6 +37,7 @@ const columns = (): ProColumns<ResCategory>[] => [
       }
       return <Button>设置公告</Button>;
     },
+    search: false,
   },
   {
     title: '类型',
@@ -46,7 +49,7 @@ const columns = (): ProColumns<ResCategory>[] => [
  * 群组分类列表管理
  * @constructor
  */
-const ResourcesCategoryIndex: React.FC<{}> = () => {
+const ResourcesCategoryIndex: React.FC = () => {
   // 加载数据
   const fetchDataList = async (params: any, _: any, __: any) => {
     const param = coverAntdPageParamModelToRequestParam(params);
