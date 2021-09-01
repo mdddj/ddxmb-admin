@@ -47,6 +47,18 @@
     ],
   },
   {
+    path: '/resources',
+    name: '资源管理',
+    icon: 'plus',
+    routes: [
+      {
+        path: '/resources/write',
+        name: '发布资源',
+        component: './Resource/write',
+      },
+    ],
+  },
+  {
     path: '/category',
     name: '分类管理',
     icon: 'NotificationOutlined',
@@ -58,7 +70,7 @@
       },
       {
         path: '/category/res/list',
-        name: '群组',
+        name: '群组分类',
         component: './Category/ResourcesCategory/index',
       },
     ],
