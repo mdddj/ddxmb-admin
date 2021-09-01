@@ -1,5 +1,6 @@
-import { message } from 'antd';
+import { message, notification } from 'antd';
 import { AntdTableResultData } from '@/entrys/PageModel';
+import { RequestParamError } from '@/entrys/RequestParamError';
 
 export interface Result<T> {
   state: number;
@@ -34,6 +35,17 @@ export async function simpleHandleResultMessage<T>(result: Result<T>, success?: 
     message.success(result.message);
     success && success(result.data);
   } else {
+    if (result.state == 505) {
+      // 请求参数错误
+      const data = result.data as any;
+      const paramsError = data as RequestParamError[];
+      paramsError.forEach((item) => {
+        notification['error']({
+          message: '缺少字段' + item.field,
+          description: item.defaultMessage,
+        });
+      });
+    }
     message.error(result.message);
   }
 }
