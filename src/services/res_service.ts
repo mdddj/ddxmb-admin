@@ -3,6 +3,7 @@ import { request } from 'umi';
 import { PagerModel, Result } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
 import { merge } from 'lodash';
+import { ResourceModel } from '@/entrys/ResourceModel';
 
 /**
  * 获取资源列表
@@ -51,5 +52,30 @@ export async function DeleteResourceCategoryById(category: ResCategory) {
   return request('/api/res/delete', {
     method: 'DELETE',
     data: category,
+  });
+}
+
+/**
+ * 根据名字模糊查询某个群组
+ * @param name  群组名
+ * @constructor
+ */
+export async function FindResCategoryListByNameLike(name: string) {
+  return request('/api/res/like-list', {
+    params: {
+      name,
+    },
+  });
+}
+
+/**
+ * 添加一个资源
+ * @param model ResourceModel 对象模型
+ * @constructor
+ */
+export async function SaveOrUpdateResourcesModel(model: ResourceModel) {
+  return request('/api/resource/save', {
+    method: 'POST',
+    data: model,
   });
 }

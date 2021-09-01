@@ -29,10 +29,17 @@ export function responseIsSuccess<T>(result: Result<T>) {
  * 简单处理服务器的消息
  * @param result  服务器返回的数据
  * @param success 操作成功返回的数据
+ * @param showSuccessMessage 是否显示成功消息
  */
-export async function simpleHandleResultMessage<T>(result: Result<T>, success?: (data: T) => void) {
+export async function simpleHandleResultMessage<T>(
+  result: Result<T>,
+  success?: (data: T) => void,
+  showSuccessMessage?: boolean,
+) {
   if (responseIsSuccess<T>(result)) {
-    message.success(result.message);
+    if (showSuccessMessage ?? true) {
+      message.success(result.message);
+    }
     success && success(result.data);
   } else {
     if (result.state == 505) {

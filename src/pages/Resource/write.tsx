@@ -1,17 +1,25 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import React from 'react';
+import React, { useState } from 'react';
 import { Button, Card, DatePicker, Form, Input } from 'antd';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import moment from 'moment';
+import { ResourceModel } from '@/entrys/ResourceModel';
+import { SaveOrUpdateResourcesModel } from '@/services/res_service';
+import { simpleHandleResultMessage } from '@/utils/result';
+import ResCategorySelect from '@/widgets/ResCategorySelect';
 
 /**
  * 发布资源页面
  * @constructor
  */
 const WriteResourcePage: React.FC = () => {
-  const submit = (values: any) => {
-    console.log(values);
-    values.content = '';
+  // 正文内容
+  const [content, setContent] = useState<string>('');
+
+  const submit = async (values: ResourceModel) => {
+    values.content = content;
+    const result = await SaveOrUpdateResourcesModel(values);
+    await simpleHandleResultMessage(result);
   };
 
   return (
@@ -22,7 +30,11 @@ const WriteResourcePage: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item label={'正文内容 (必填)'}>
-            <MarkdownEditor height={100} />
+            <MarkdownEditor
+              height={100}
+              value={content}
+              onChange={(_: any, __: any, value: string) => setContent(value)}
+            />
           </Form.Item>
           <Form.Item label={'填写额外信息'}>
             <Card bordered={false}>
@@ -89,6 +101,9 @@ const WriteResourcePage: React.FC = () => {
                 </Form.Item>
               </Card.Grid>
             </Card>
+          </Form.Item>
+          <Form.Item>
+            <ResCategorySelect />
           </Form.Item>
           <Form.Item>
             <Button htmlType={'submit'} type={'primary'}>
