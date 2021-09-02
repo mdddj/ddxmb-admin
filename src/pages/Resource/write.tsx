@@ -7,6 +7,7 @@ import { ResourceModel } from '@/entrys/ResourceModel';
 import { SaveOrUpdateResourcesModel } from '@/services/res_service';
 import { simpleHandleResultMessage } from '@/utils/result';
 import ResCategorySelect from '@/widgets/ResCategorySelect';
+import { ResCategory } from '@/entrys/ResCategory';
 
 /**
  * 发布资源页面
@@ -15,9 +16,14 @@ import ResCategorySelect from '@/widgets/ResCategorySelect';
 const WriteResourcePage: React.FC = () => {
   // 正文内容
   const [content, setContent] = useState<string>('');
+  const [category, setCategory] = useState<ResCategory>();
 
   const submit = async (values: ResourceModel) => {
+    console.log(values);
     values.content = content;
+    if (category) {
+      values.category = category;
+    }
     const result = await SaveOrUpdateResourcesModel(values);
     await simpleHandleResultMessage(result);
   };
@@ -102,8 +108,8 @@ const WriteResourcePage: React.FC = () => {
               </Card.Grid>
             </Card>
           </Form.Item>
-          <Form.Item>
-            <ResCategorySelect />
+          <Form.Item label={'投放分类'} tooltip={'也就是群组分类'}>
+            <ResCategorySelect onSelect={setCategory} current={category} />
           </Form.Item>
           <Form.Item>
             <Button htmlType={'submit'} type={'primary'}>

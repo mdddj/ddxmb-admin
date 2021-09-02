@@ -6,9 +6,11 @@ import { simpleHandleResultMessage } from '@/utils/result';
 
 const { Option } = Select;
 
-const ResCategorySelect: React.FC = () => {
+const ResCategorySelect: React.FC<{
+  current?: ResCategory;
+  onSelect?: (category: ResCategory) => void;
+}> = ({ current, onSelect }) => {
   const [values, setValues] = useState<ResCategory[]>([]);
-  const [value, setValue] = useState<number>();
 
   // 执行搜索
   const handleSearch = async (value: string) => {
@@ -24,13 +26,15 @@ const ResCategorySelect: React.FC = () => {
 
   // 选中某个Option 回调
   const handleChange = (value: React.SetStateAction<number | undefined>) => {
-    setValue(value);
+    const id = value as number;
+    const find = values.find((item) => item.id == id);
+    onSelect?.(find!);
   };
 
   return (
     <Select
       showSearch
-      value={value}
+      value={current?.id}
       placeholder={'请输入群组名查询,支持模糊搜索'}
       defaultActiveFirstOption={false}
       showArrow={false}

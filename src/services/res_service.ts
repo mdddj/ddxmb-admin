@@ -1,9 +1,9 @@
 import { PageParam } from '@/entrys/PageModel';
-import { request } from 'umi';
 import { PagerModel, Result } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
 import { merge } from 'lodash';
 import { ResourceModel } from '@/entrys/ResourceModel';
+import request from 'umi-request';
 
 /**
  * 获取资源列表

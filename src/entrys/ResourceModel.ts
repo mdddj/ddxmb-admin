@@ -1,3 +1,5 @@
+import { ResCategory } from '@/entrys/ResCategory';
+
 export interface ResourceModel {
   title: string;
   label: string;
@@ -9,4 +11,6 @@ export interface ResourceModel {
   type: string;
   clickCount: number;
   content: string;
+  // 资源所属分类
+  category: ResCategory | undefined;
 }
