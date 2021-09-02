@@ -59,6 +59,18 @@
     ],
   },
   {
+    path: '/file',
+    name: '文件系统',
+    icon: 'plus',
+    routes: [
+      {
+        path: '/file/upload',
+        name: '上传文件',
+        component: './File/Upload',
+      },
+    ],
+  },
+  {
     path: '/category',
     name: '分类管理',
     icon: 'NotificationOutlined',

@@ -1,8 +1,8 @@
 import React from 'react';
-import { useRequest } from '@@/plugin-request/request';
 import { getBlogCategorys } from '@/services/blog';
 import { Category } from '@/services/models/BlogPushNewResultData';
 import { Tag } from 'antd';
+import { useRequest } from '@umijs/hooks';
 
 /**
  * 博客分类组件
