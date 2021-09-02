@@ -1,10 +1,3 @@
-
-export interface AllAppResult {
-  state: number;
-  message: string;
-  data: DtkDetail[];
-}
-
 export interface DtkDetail {
   id: number;
   appKey: string;
@@ -14,4 +7,3 @@ export interface DtkDetail {
   selectDefault: boolean;
   logo: string;
 }
-
