@@ -146,4 +146,16 @@
   {
     component: './404',
   },
+  {
+    component: './User/UpdateUserPassword',
+  },
+  {
+    path: '/account',
+    routes: [
+      {
+        // path: '/account/settings',
+        component: './User/UpdateUserPassword',
+      },
+    ],
+  },
 ];

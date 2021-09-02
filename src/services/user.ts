@@ -24,3 +24,19 @@ export async function getQrCodeUuid(): Promise<any> {
 export async function checkUUidCode(uuid: string): Promise<any> {
   return request<String>('/api/user-get?uuid=' + uuid);
 }
+
+/**
+ * 修改用户登录密码
+ * @param currentPass 当前密码
+ * @param rePassword  重置密码
+ * @constructor
+ */
+export async function UpdateUserPassword(currentPass: string, rePassword: string) {
+  return request('/api/user/auth/update-pass', {
+    method: 'POST',
+    params: {
+      currentPass,
+      rePassword,
+    },
+  });
+}

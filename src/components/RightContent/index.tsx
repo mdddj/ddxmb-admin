@@ -45,7 +45,7 @@ const GlobalHeaderRight: React.FC = () => {
         //   console.log('input', value);
         // }}
       />
-      <Avatar />
+      <Avatar menu={true} />
       {REACT_APP_ENV && (
         <span>
           <Tag color={ENVTagColor[REACT_APP_ENV]}>{REACT_APP_ENV}</Tag>

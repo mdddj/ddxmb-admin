@@ -190,6 +190,15 @@ const ResourcesCategoryIndex: React.FC = () => {
             >
               <Input />
             </Form.Item>
+
+            <Button
+              onClick={() => {
+                form.setFieldsValue({ type: 'folder' });
+              }}
+            >
+              文件夹类型
+            </Button>
+
             <Form.Item label={'介绍'}>
               <MarkdownEditor
                 height={200}
