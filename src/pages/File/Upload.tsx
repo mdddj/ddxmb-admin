@@ -27,8 +27,7 @@ const UploadPage: React.FC = () => {
     const formData = new FormData();
     values.folder = category;
     formData.append('file', file!!);
-    console.log(values);
-    formData.set('info', values as any);
+    formData.set('info', JSON.stringify(values as any));
     const result = await UploadFile(formData);
     await simpleHandleResultMessage(result, (data) => {
       console.log(data);

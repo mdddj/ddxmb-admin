@@ -64,6 +64,11 @@
     icon: 'plus',
     routes: [
       {
+        path: '/file/list',
+        name: '文件列表',
+        component: './File/Files',
+      },
+      {
         path: '/file/upload',
         name: '上传文件',
         component: './File/Upload',

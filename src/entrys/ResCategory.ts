@@ -8,4 +8,5 @@ export interface ResCategory {
   announcement: any;
   users: User[];
   type: string | undefined;
+  childers: ResCategory[]; // 子节点
 }
