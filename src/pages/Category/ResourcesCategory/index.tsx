@@ -136,7 +136,11 @@ const ResourcesCategoryIndex: React.FC = () => {
             rowKey={'id'}
             actionRef={tableRef}
             toolBarRender={() => {
-              return [<Button onClick={setTrue}>新增群组</Button>];
+              return [
+                <Button onClick={setTrue} key={'add'} type={'primary'}>
+                  新增群组
+                </Button>,
+              ];
             }}
           />
         </Card>

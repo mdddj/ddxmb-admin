@@ -13,7 +13,9 @@ import {
   ParseResultToProTable,
   simpleHandleResultMessage,
 } from '@/utils/result';
-import { Avatar } from 'antd';
+import { Avatar, Button, DatePicker, Drawer, Form, Input } from 'antd';
+import { useBoolean } from '@umijs/hooks';
+import TextArea from 'antd/es/input/TextArea';
 
 // 表格列
 const columns = (): ProColumns<Category>[] => {
@@ -52,14 +54,16 @@ const columns = (): ProColumns<Category>[] => {
  */
 const BlogCategoryIndex: React.FC = ({}) => {
   const action = useRef<ActionType>();
+  const { state, setFalse, setTrue } = useBoolean();
 
   // 加载数据
   const fetchData = async (params: any, _: any, __: any) => {
-    const result = await GetCategoryForTableData(
-      coverAntdPageParamModelToRequestParam(params),
-      antdTableParamAsT<Category>(params),
+    return ParseResultToProTable<Category>(
+      await GetCategoryForTableData(
+        coverAntdPageParamModelToRequestParam(params),
+        antdTableParamAsT<Category>(params),
+      ),
     );
-    return ParseResultToProTable<Category>(result);
   };
 
   // 编辑表格
@@ -72,6 +76,15 @@ const BlogCategoryIndex: React.FC = ({}) => {
   const onDelete = async (key: any) => {
     const result = await DeleteBlogCategory(key as number);
     await simpleHandleResultMessage(result, undefined, true, action.current?.reload);
+  };
+
+  // 新增
+  const addNew = async (values: Category) => {
+    const result = await SaveAndUpdateBlogCategory(values);
+    await simpleHandleResultMessage(result, (data) => {
+      setFalse();
+      action.current?.reload();
+    });
   };
 
   return (
@@ -87,7 +100,34 @@ const BlogCategoryIndex: React.FC = ({}) => {
             onSave: onEditRow,
             onDelete: onDelete,
           }}
+          toolBarRender={() => [
+            <Button key={'add'} type={'primary'} onClick={setTrue}>
+              新增分类
+            </Button>,
+          ]}
         />
+
+        <Drawer visible={state} onClose={setFalse} width={1000}>
+          <Form layout={'vertical'} onFinish={addNew}>
+            <Form.Item label={'分类名'} name={'name'} required={true}>
+              <Input />
+            </Form.Item>
+            <Form.Item label={'Logo'} name={'logo'} required={true}>
+              <Input />
+            </Form.Item>
+            <Form.Item label={'介绍'} name={'intro'} required={true}>
+              <TextArea />
+            </Form.Item>
+            <Form.Item label={'创建时间'} name={'createDate'} required={true}>
+              <DatePicker />
+            </Form.Item>
+            <Form.Item>
+              <Button htmlType={'submit'} type={'primary'}>
+                提交
+              </Button>
+            </Form.Item>
+          </Form>
+        </Drawer>
       </PageContainer>
     </>
   );
