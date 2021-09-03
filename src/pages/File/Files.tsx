@@ -1,11 +1,12 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import React, { useState } from 'react';
-import { Card, Col, Row, Tree } from 'antd';
+import { Layout, Tree } from 'antd';
 import { useMount } from '@umijs/hooks';
 import { GetFolders } from '@/services/file_service';
 import { simpleHandleResultMessage } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
-import { FolderFilled } from '@ant-design/icons';
+import Sider from 'antd/es/layout/Sider';
+import { Content } from 'antd/es/layout/layout';
 
 interface DataNode {
   title: string;
@@ -17,6 +18,7 @@ interface DataNode {
 // 文件列表
 const FilesPage: React.FC = () => {
   const [treeData, setTreeData] = useState<DataNode[]>([]);
+  const [folders, setFolders] = useState<ResCategory[]>([]);
 
   //
   useMount(async () => {
@@ -24,8 +26,9 @@ const FilesPage: React.FC = () => {
     await simpleHandleResultMessage<ResCategory[]>(
       result,
       (data) => {
-        const nodes = treeCovertToNode(result.data);
+        const nodes = treeCovertToNode(data);
         setTreeData(nodes);
+        setFolders(data);
       },
       false,
     );
@@ -35,7 +38,7 @@ const FilesPage: React.FC = () => {
     return list.map((item) => {
       return {
         title: item.name,
-        key: item.name,
+        key: item.id.toString(),
         isLeaf: item.childers?.length !== 0,
       };
     });
@@ -45,19 +48,18 @@ const FilesPage: React.FC = () => {
     console.log(keys);
   };
 
+  const onRightClick = ({ event, node }) => {
+    console.log(node);
+  };
+
   return (
     <PageContainer>
-      <Row gutter={12}>
-        <Col span={6}>
-          <Card>
-            <Tree treeData={treeData} switcherIcon={<FolderFilled />} onSelect={onSelect}></Tree>
-          </Card>
-        </Col>
-
-        <Col span={18}>
-          <Card></Card>
-        </Col>
-      </Row>
+      <Layout>
+        <Sider theme={'light'}>
+          <Tree treeData={treeData} onSelect={onSelect} onRightClick={onRightClick}></Tree>
+        </Sider>
+        <Content></Content>
+      </Layout>
     </PageContainer>
   );
 };

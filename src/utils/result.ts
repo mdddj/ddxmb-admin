@@ -30,11 +30,13 @@ export function responseIsSuccess<T>(result: Result<T>) {
  * @param result  服务器返回的数据
  * @param success 操作成功返回的数据
  * @param showSuccessMessage 是否显示成功消息
+ * @param error 操作失败的回调
  */
 export async function simpleHandleResultMessage<T>(
   result: Result<T>,
   success?: (data: T) => void,
   showSuccessMessage?: boolean,
+  error?: () => void,
 ) {
   if (responseIsSuccess<T>(result)) {
     if (showSuccessMessage ?? true) {
@@ -54,6 +56,7 @@ export async function simpleHandleResultMessage<T>(
       });
     }
     message.error(result.message);
+    error?.();
   }
 }
 
@@ -95,6 +98,9 @@ export const ParseResultToProTable = <T>(result: Result<any>): AntdTableResultDa
 export const antdTableParamAsT = <T>(params: any) => {
   if (params.current) {
     delete params.current;
+  }
+  if (params.pageSize) {
+    delete params.pageSize;
   }
   for (let key in params) {
     if (params[key] === '') {
