@@ -33,7 +33,7 @@ export async function getTextList(
  * @param text  字典对象
  */
 export async function saveText(text: TextModel): Promise<Result<TextModel>> {
-  return request<Result<TextModel>>('/api/text/update', {
+  return request<Result<TextModel>>('/api/auth/text-update', {
     method: 'POST',
     data: text,
   });
@@ -44,7 +44,7 @@ export async function saveText(text: TextModel): Promise<Result<TextModel>> {
  * @param id 主键
  */
 export async function deleteTextById(id: string) {
-  return request<Result<string>>('/api/text/delete', {
+  return request<Result<string>>('/api/auth/text-delete', {
     data: {
       id,
     },

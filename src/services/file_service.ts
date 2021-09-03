@@ -7,7 +7,7 @@ import { ResCategory } from '@/entrys/ResCategory';
  * @param data 数据
  */
 export async function UploadFile(data: FormData) {
-  return request('/api/file/upload', {
+  return request('/api/auth/file-upload', {
     method: 'POST',
     data: data,
   });

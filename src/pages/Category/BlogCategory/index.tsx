@@ -2,7 +2,11 @@ import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Category } from '@/services/models/BlogPushNewResultData';
-import { GetCategoryForTableData, SaveAndUpdateBlogCategory } from '@/services/blog';
+import {
+  DeleteBlogCategory,
+  GetCategoryForTableData,
+  SaveAndUpdateBlogCategory,
+} from '@/services/blog';
 import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
 import {
   antdTableParamAsT,
@@ -61,7 +65,13 @@ const BlogCategoryIndex: React.FC = ({}) => {
   // 编辑表格
   const onEditRow = async (key: any, data: Category, row: any) => {
     const result = await SaveAndUpdateBlogCategory(data);
-    await simpleHandleResultMessage(result, (_) => {}, false, action.current?.reload);
+    await simpleHandleResultMessage(result, undefined, false, action.current?.reload);
+  };
+
+  // 删除表格
+  const onDelete = async (key: any) => {
+    const result = await DeleteBlogCategory(key as number);
+    await simpleHandleResultMessage(result, undefined, true, action.current?.reload);
   };
 
   return (
@@ -75,6 +85,7 @@ const BlogCategoryIndex: React.FC = ({}) => {
           bordered={true}
           editable={{
             onSave: onEditRow,
+            onDelete: onDelete,
           }}
         />
       </PageContainer>

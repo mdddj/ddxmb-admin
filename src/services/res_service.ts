@@ -37,7 +37,7 @@ export async function GetResourceCategoryList(
  * @constructor
  */
 export async function SaveOrUpdateResourceCategory(category: ResCategory) {
-  return request('/api/res/save', {
+  return request('/api/auth/res-cate-save', {
     method: 'POST',
     data: category,
   });
@@ -49,7 +49,7 @@ export async function SaveOrUpdateResourceCategory(category: ResCategory) {
  * @constructor
  */
 export async function DeleteResourceCategoryById(category: ResCategory) {
-  return request('/api/res/delete', {
+  return request('/api/auth/res-cate-delete', {
     method: 'DELETE',
     data: category,
   });
@@ -74,7 +74,7 @@ export async function FindResCategoryListByNameLike(name: string) {
  * @constructor
  */
 export async function SaveOrUpdateResourcesModel(model: ResourceModel) {
-  return request('/api/resource/save', {
+  return request('/api/auth/resource-save', {
     method: 'POST',
     data: model,
   });

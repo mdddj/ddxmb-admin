@@ -32,7 +32,7 @@ export async function checkUUidCode(uuid: string): Promise<any> {
  * @constructor
  */
 export async function UpdateUserPassword(currentPass: string, rePassword: string) {
-  return request('/api/user/auth/update-pass', {
+  return request('/api/auth/user-update-pass', {
     method: 'POST',
     params: {
       currentPass,

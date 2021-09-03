@@ -69,8 +69,20 @@ export async function GetCategoryForTableData(pageModel: PageParam, category?: C
  * @constructor
  */
 export async function SaveAndUpdateBlogCategory(category: Category): Promise<Result<Category>> {
-  return request<Result<Category>>('/api/blog/category/save', {
+  return request<Result<Category>>('/api/auth/blog-category-save', {
     method: 'POST',
     data: category,
+  });
+}
+
+/**
+ * 删除一个分类,如果分类下存在博客,需要将该分类下的全部博客删除,才能删除此分类
+ * @param id  分类id
+ * @constructor
+ */
+export async function DeleteBlogCategory(id: number) {
+  return request('/api/auth/blog-category-delete', {
+    data: { id },
+    method: 'DELETE',
   });
 }
