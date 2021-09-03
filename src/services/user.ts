@@ -8,7 +8,7 @@ export async function query() {
 
 // 获取当前登录用户
 export async function queryCurrent() {
-  return request<APILoginData>('/api/auth/current');
+  return request<APILoginData>('/api/get-user-by-token');
 }
 
 export async function queryNotices(): Promise<any> {

@@ -1,24 +1,20 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import React, { useState } from 'react';
-import { Layout, Tree } from 'antd';
+import { Card, Col, message, Row } from 'antd';
 import { useMount } from '@umijs/hooks';
-import { GetFolders } from '@/services/file_service';
+import { GetFilesWithFolderId, GetFolders } from '@/services/file_service';
 import { simpleHandleResultMessage } from '@/utils/result';
 import { ResCategory } from '@/entrys/ResCategory';
-import Sider from 'antd/es/layout/Sider';
-import { Content } from 'antd/es/layout/layout';
-
-interface DataNode {
-  title: string;
-  key: string;
-  isLeaf?: boolean;
-  children?: DataNode[];
-}
+import { FileInfo } from '@/entrys/FileInfo';
+import { Spacer } from '@geist-ui/react';
+import { CopyFilled, FileFilled, FolderFilled } from '@ant-design/icons';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
 // 文件列表
 const FilesPage: React.FC = () => {
-  const [treeData, setTreeData] = useState<DataNode[]>([]);
   const [folders, setFolders] = useState<ResCategory[]>([]);
+  const [currFolder, setCueeFolder] = useState<ResCategory>();
+  const [files, setFiles] = useState<FileInfo[]>([]);
 
   //
   useMount(async () => {
@@ -26,40 +22,63 @@ const FilesPage: React.FC = () => {
     await simpleHandleResultMessage<ResCategory[]>(
       result,
       (data) => {
-        const nodes = treeCovertToNode(data);
-        setTreeData(nodes);
         setFolders(data);
       },
       false,
     );
   });
 
-  const treeCovertToNode = (list: ResCategory[]): DataNode[] => {
-    return list.map((item) => {
-      return {
-        title: item.name,
-        key: item.id.toString(),
-        isLeaf: item.childers?.length !== 0,
-      };
-    });
+  // 选中某个文件夹
+  const onSelect = async (item: ResCategory) => {
+    setCueeFolder(item);
+    const result = await GetFilesWithFolderId(item.id, { page: 0, pageSize: 10 });
+    await simpleHandleResultMessage(
+      result,
+      (data) => {
+        setFiles(data.list);
+      },
+      false,
+    );
   };
 
-  const onSelect = (keys: any) => {
-    console.log(keys);
-  };
-
-  const onRightClick = ({ event, node }) => {
-    console.log(node);
-  };
+  console.log(currFolder);
 
   return (
     <PageContainer>
-      <Layout>
-        <Sider theme={'light'}>
-          <Tree treeData={treeData} onSelect={onSelect} onRightClick={onRightClick}></Tree>
-        </Sider>
-        <Content></Content>
-      </Layout>
+      {/* 操作区域 */}
+      <Card>
+        <span>/root</span>
+      </Card>
+
+      <Spacer />
+
+      <Row gutter={12}>
+        {!currFolder &&
+          folders.map((item) => (
+            <Col span={4} key={item.id}>
+              <Card hoverable={true} onClick={() => onSelect(item)}>
+                <div>
+                  <FolderFilled style={{ fontSize: 40, color: 'blue' }} />
+                </div>
+                <div>{item.name}</div>
+              </Card>
+            </Col>
+          ))}
+
+        {files.map((item) => (
+          <Col span={4} key={item.id}>
+            <Card hoverable={true}>
+              <FileFilled style={{ fontSize: 40, color: 'gray' }} />
+              <div>
+                {item.fileName}
+                <CopyToClipboard text={item.url} onCopy={() => message.success('复制url成功')}>
+                  <CopyFilled />
+                </CopyToClipboard>
+              </div>
+            </Card>
+          </Col>
+        ))}
+      </Row>
     </PageContainer>
   );
 };

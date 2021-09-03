@@ -95,16 +95,13 @@ const codeMessage = {
 /**
  * 异常处理程序
  */
-const errorHandler = (error: ResponseError) => {
+const errorHandler = async (error: ResponseError) => {
   const { response } = error;
   if (response && response.status) {
     const errorText = codeMessage[response.status] || response.statusText;
-    const { status, url } = response;
+    const { status } = response;
 
-    notification.error({
-      message: `请求错误 ${status}: ${url}`,
-      description: errorText,
-    });
+    message.error(status + errorText);
   }
 
   if (!response) {

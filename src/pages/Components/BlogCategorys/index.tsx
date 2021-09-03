@@ -22,8 +22,6 @@ const BlogCategorys: React.FC<{
     return <div>加载失败:{error}</div>;
   }
 
-  console.log(data);
-
   const list = data.data as Category[];
 
   return (

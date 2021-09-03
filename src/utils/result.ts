@@ -2,6 +2,11 @@ import { message, notification } from 'antd';
 import { AntdTableResultData } from '@/entrys/PageModel';
 import { RequestParamError } from '@/entrys/RequestParamError';
 
+export interface Page<T> {
+  list: T[];
+  page: PagerModel;
+}
+
 export interface Result<T> {
   state: number;
   message: string;
