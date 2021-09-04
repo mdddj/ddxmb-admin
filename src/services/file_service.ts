@@ -4,6 +4,7 @@ import { ResCategory } from '@/entrys/ResCategory';
 import { merge } from 'lodash';
 import { PageParam } from '@/entrys/PageModel';
 import { FileInfo } from '@/entrys/FileInfo';
+import { SaveOrUpdateResourceCategory } from '@/services/res_service';
 
 /**
  * 上传文件
@@ -31,7 +32,7 @@ export async function GetFolders(name?: string): Promise<Result<ResCategory[]>> 
 }
 
 /**
- * 根据文件夹id或者文件列表
+ * 根据文件夹id或者文件列表查找文件列表
  * @param folderId  文件夹id
  * @param pageModel 分页数据
  * @constructor
@@ -44,4 +45,21 @@ export async function GetFilesWithFolderId(
     method: 'GET',
     params: merge({ id: folderId }, pageModel),
   });
+}
+
+/**
+ * 创建文件夹接口
+ * @param name  文件夹名字
+ * @param paramFolder 父文件夹
+ * @constructor
+ */
+export async function CreateFolder(name: string, parenFolder?: ResCategory) {
+  const cate = {
+    name,
+    type: 'folder',
+  } as ResCategory;
+  if (parenFolder) {
+    cate.parentNode = parenFolder;
+  }
+  return SaveOrUpdateResourceCategory(cate);
 }

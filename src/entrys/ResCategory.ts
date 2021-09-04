@@ -9,4 +9,5 @@ export interface ResCategory {
   users: User[];
   type: string | undefined;
   childers: ResCategory[]; // 子节点
+  parentNode: ResCategory | undefined; // 父节点
 }

@@ -32,7 +32,7 @@ export async function GetResourceCategoryList(
 }
 
 /**
- * 添加或者修改一个资源分类分页
+ * 添加或者修改一个资源分类
  * @param category  分类
  * @constructor
  */
