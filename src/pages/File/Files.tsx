@@ -1,6 +1,6 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import React, { useState } from 'react';
-import { Button, Card, Col, message, Row } from 'antd';
+import { Breadcrumb, Button, Card, Col, message, Row } from 'antd';
 import { useMount } from '@umijs/hooks';
 import { CreateFolder, GetFilesWithFolderId, GetFolders } from '@/services/file_service';
 import { simpleHandleResultMessage } from '@/utils/result';
@@ -13,6 +13,11 @@ import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/
 import { TextField } from '@material-ui/core';
 import { useRequest } from '@@/plugin-request/request';
 
+interface NavLink {
+  id: number;
+  name: string;
+}
+
 // 文件列表
 const FilesPage: React.FC = () => {
   const [folders, setFolders] = useState<ResCategory[]>([]);
@@ -20,10 +25,16 @@ const FilesPage: React.FC = () => {
   const [files, setFiles] = useState<FileInfo[]>([]);
   const [open, setOpen] = useState<boolean>(false);
   const [createFolderName, setCreateFolderName] = useState<string>('');
+  const [navs, setNavs] = useState<NavLink[]>([]);
 
   // 组件挂载完成
   useMount(async () => {
-    const result = await GetFolders();
+    await getFolders();
+  });
+
+  /// 获取文件夹列表
+  const getFolders = async (id?: number) => {
+    const result = await GetFolders(id);
     await simpleHandleResultMessage<ResCategory[]>(
       result,
       (data) => {
@@ -31,11 +42,12 @@ const FilesPage: React.FC = () => {
       },
       false,
     );
-  });
+  };
 
   // 选中某个文件夹
   const onSelect = async (item: ResCategory) => {
     setCueeFolder(item);
+    await getFolders(item.id);
     const result = await GetFilesWithFolderId(item.id, { page: 0, pageSize: 10 });
     await simpleHandleResultMessage(
       result,
@@ -44,6 +56,11 @@ const FilesPage: React.FC = () => {
       },
       false,
     );
+    if (currFolder) {
+      const navs = generNav(currFolder, []);
+      console.log(navs);
+      setNavs(navs);
+    }
   };
 
   const createService = (name: string) => {
@@ -62,6 +79,16 @@ const FilesPage: React.FC = () => {
     await run(createFolderName);
   };
 
+  /// 生成导航列表的方法
+  const generNav = (cate: ResCategory, list: NavLink[]): NavLink[] => {
+    const nav = { id: cate.id, name: cate.name } as NavLink;
+    list.unshift(nav);
+    if (cate.parentNode) {
+      return generNav(cate.parentNode, list);
+    }
+    return list;
+  };
+
   return (
     <PageContainer>
       {/* 操作区域 */}
@@ -72,23 +99,28 @@ const FilesPage: React.FC = () => {
           </Button>,
         ]}
       >
-        <span>/root</span>
+        {navs.length != 0 && (
+          <Breadcrumb>
+            {navs.map((item) => (
+              <Breadcrumb.Item key={item.id}>{item.name}</Breadcrumb.Item>
+            ))}
+          </Breadcrumb>
+        )}
       </Card>
 
       <Spacer />
 
       <Row gutter={12}>
-        {!currFolder &&
-          folders.map((item) => (
-            <Col span={4} key={item.id}>
-              <Card hoverable={true} onClick={() => onSelect(item)}>
-                <div>
-                  <FolderFilled style={{ fontSize: 40, color: 'blue' }} />
-                </div>
-                <div>{item.name}</div>
-              </Card>
-            </Col>
-          ))}
+        {folders.map((item) => (
+          <Col span={4} key={item.id}>
+            <Card hoverable={true} onClick={() => onSelect(item)}>
+              <div>
+                <FolderFilled style={{ fontSize: 40, color: 'blue' }} />
+              </div>
+              <div>{item.name}</div>
+            </Card>
+          </Col>
+        ))}
 
         {files.map((item) => (
           <Col span={4} key={item.id}>

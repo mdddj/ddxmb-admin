@@ -19,14 +19,14 @@ export async function UploadFile(data: FormData) {
 
 /**
  * 获取文件夹列表
- * @param name  父文件夹
+ * @param id  父文件夹
  * @constructor
  */
-export async function GetFolders(name?: string): Promise<Result<ResCategory[]>> {
+export async function GetFolders(id?: number): Promise<Result<ResCategory[]>> {
   return request<Result<ResCategory[]>>('/api/file/get-folders', {
     method: 'GET',
     params: {
-      name,
+      id,
     },
   });
 }

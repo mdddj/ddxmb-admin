@@ -10,4 +10,5 @@ export interface ResCategory {
   type: string | undefined;
   childers: ResCategory[]; // 子节点
   parentNode: ResCategory | undefined; // 父节点
+  navJsonString: string | undefined;
 }
