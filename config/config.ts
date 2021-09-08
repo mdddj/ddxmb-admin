@@ -38,7 +38,7 @@ export default defineConfig({
   esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy.dev,
+  proxy: proxy.pro,
   manifest: {
     basePath: '/',
   },

@@ -7,11 +7,12 @@ import { Button, Card, Input, message, Modal } from 'antd';
 import BlogCategorys from '@/pages/Components/BlogCategorys';
 import { Category } from '@/services/models/BlogPushNewResultData';
 import TagListInputEdit from '@/pages/Components/TagListInput';
-import { getBlogDetailById, pushNewBlog } from '@/services/blog';
+import { getBlogDetailById } from '@/services/blog';
 import PushNewBlogParams from '@/services/models/PushNewBlogParamsModel';
 import { useLocation } from 'umi';
 import { useMount } from '@umijs/hooks';
 import { BlogObject } from '@/pages/Blog/components/list/DATA';
+import { blogApi } from '@/utils/request';
 
 export default (): React.ReactNode => {
   const [title, setTitle] = useState<string>('');
@@ -97,7 +98,7 @@ export default (): React.ReactNode => {
     if (id) {
       param.id = id;
     }
-    const result = await pushNewBlog(param);
+    const result = await blogApi().pushNewBlog(param);
     if (result.state == 200) {
       message.success(result.message);
     } else {
