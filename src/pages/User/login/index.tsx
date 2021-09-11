@@ -2,12 +2,13 @@ import { LockTwoTone, UserOutlined } from '@ant-design/icons';
 import { message as msg } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
-import { Link, history, useModel } from 'umi';
+import { Link, history } from 'umi';
 import Footer from '@/components/Footer';
 import styles from './index.less';
 import Title from 'antd/lib/typography/Title';
 import Api from '@/utils/request';
 import { successResultHandle } from 'dd_server_api_web/apis/utils/ResultUtil';
+import { useModel } from '@@/plugin-model/useModel';
 
 /**
  * 此方法会跳转到 redirect 参数所在的位置
@@ -35,12 +36,11 @@ const Login: React.FC = () => {
 
   // 加载用户信息
   const fetchUserInfo = async (token: string) => {
-    console.log('正在请求用户信息' + token);
     localStorage.setItem('token', token);
     const userInfo = await initialState?.fetchUserInfo?.(token);
 
     if (userInfo) {
-      setInitialState({ ...initialState, currentUser: userInfo });
+      await setInitialState({ ...initialState, currentUser: userInfo });
     }
   };
 

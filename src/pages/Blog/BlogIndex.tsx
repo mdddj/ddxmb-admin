@@ -1,20 +1,19 @@
 import * as React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import { Avatar, Card, message } from 'antd';
-import { getBlogList } from '@/pages/Blog/BlogService';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import InputDailog from '@/pages/Components/inputdialog/InputDialog';
 import { useState } from 'react';
 import { Chip } from '@material-ui/core';
-import { BlogObject } from '@/pages/Blog/components/list/DATA';
 import { Link } from 'umi';
 import Api from '@/utils/request';
+import { BlogData } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
 
 // 博客列表首页
 
 export default (): React.ReactNode => {
   const [showDialog, setShowDialog] = useState<boolean>(false);
-  const BlogTableColumn: ProColumns<BlogObject>[] = [
+  const BlogTableColumn: ProColumns<BlogData>[] = [
     {
       title: 'ID',
       dataIndex: 'id',
@@ -84,15 +83,19 @@ export default (): React.ReactNode => {
     <>
       <PageContainer>
         <Card>
-          <ProTable<BlogObject>
+          <ProTable<BlogData>
             columns={BlogTableColumn}
             rowKey={'id'}
             request={async (params) => {
-              const data = await getBlogList({
-                page: params.current ?? 0,
-                pageSize: params.pageSize,
-              });
-              return { data: data.data.list, success: data && data.state == 200 };
+              const data = await Api.getInstance().getBlogList(
+                params.current ?? 0,
+                params.pageSize ?? 10,
+              );
+              return {
+                data: data.data?.list,
+                success: data && data.state == 200,
+                total: data.data?.page?.total ?? 0,
+              };
             }}
           />
 

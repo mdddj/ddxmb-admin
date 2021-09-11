@@ -118,7 +118,7 @@ const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void; value: str
       )}
 
       {/* 服务器已保存的标签列表  */}
-      {showServerTags && TagSelectList(data, insetValue)}
+      {showServerTags && TagSelectList(data ?? [], insetValue)}
 
       {/* 添加新标签按钮 */}
       {!inputVisible && (

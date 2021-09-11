@@ -1,7 +1,6 @@
 import type { Settings as LayoutSettings } from '@ant-design/pro-layout';
 import { PageLoading } from '@ant-design/pro-layout';
 import { message, notification } from 'antd';
-import type { RequestConfig, RunTimeLayoutConfig } from 'umi';
 import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
@@ -9,6 +8,8 @@ import type { RequestOptionsInit, ResponseError } from 'umi-request';
 import defaultSettings from '../config/defaultSettings';
 import { User } from 'dd_server_api_web/apis/model/UserModel';
 import Api from '@/utils/request';
+import { RunTimeLayoutConfig } from '@@/plugin-layout/layoutExports';
+import { RequestConfig } from '@@/plugin-request/request';
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
