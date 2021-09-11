@@ -6,13 +6,13 @@ import { Link, useLocation } from 'umi';
 import remarkGfm from 'remark-gfm';
 // @ts-ignore
 import { useRequest } from '@@/plugin-request/request';
-import { getBlogDetailById } from '@/services/blog';
 // @ts-ignore
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 // @ts-ignore
 import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Title from 'antd/lib/typography/Title';
 import 'github-markdown-css/github-markdown.css';
+import Api from '@/utils/request';
 
 /**
  * 博客预览组件
@@ -72,7 +72,7 @@ export default (): React.ReactNode => {
   let blogData;
   let initLoading = false;
   if (blogId) {
-    const { data, loading } = useRequest(() => getBlogDetailById(blogId));
+    const { data, loading } = useRequest(() => Api.getInstance().getBlogDetailById(blogId));
     blogData = data;
     initLoading = loading;
   }

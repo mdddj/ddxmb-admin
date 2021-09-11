@@ -4,9 +4,9 @@ import { Button, Card, Form, Input, Upload } from 'antd';
 import { RcFile } from 'antd/lib/upload/interface';
 import { useForm } from 'antd/es/form/Form';
 import ResCategorySelect from '@/widgets/ResCategorySelect';
-import { ResCategory } from '@/entrys/ResCategory';
-import { UploadFile } from '@/services/file_service';
-import { simpleHandleResultMessage } from '@/utils/result';
+import { simpleHandleResultMessage } from 'dd_server_api_web/apis/utils/ResultUtil';
+import Api from '@/utils/request';
+import { ResCategory } from 'dd_server_api_web/apis/model/ResCategory';
 
 // 文件上传界面
 const UploadPage: React.FC = () => {
@@ -28,7 +28,7 @@ const UploadPage: React.FC = () => {
     values.folder = category;
     formData.append('file', file!!);
     formData.set('info', JSON.stringify(values as any));
-    const result = await UploadFile(formData);
+    const result = await Api.getInstance().uploadFile(formData);
     await simpleHandleResultMessage(result, (data) => {
       console.log(data);
     });

@@ -6,9 +6,9 @@ import { history } from 'umi';
 import RightContent from '@/components/RightContent';
 import Footer from '@/components/Footer';
 import type { RequestOptionsInit, ResponseError } from 'umi-request';
-import { queryCurrent } from './services/user';
 import defaultSettings from '../config/defaultSettings';
-import { APILoginData } from '@/services/models/API.LOGIN';
+import { User } from 'dd_server_api_web/apis/model/UserModel';
+import Api from '@/utils/request';
 
 /**
  * 获取用户信息比较慢的时候会展示一个 loading
@@ -19,16 +19,16 @@ export const initialStateConfig = {
 
 export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
-  currentUser?: APILoginData;
+  currentUser?: User;
   userToken?: String;
-  fetchUserInfo?: () => Promise<APILoginData | undefined>;
+  fetchUserInfo?: (token: string) => Promise<User | undefined>;
 }> {
-  const fetchUserInfo = async () => {
+  const fetchUserInfo = async (token: string): Promise<User | undefined> => {
     try {
-      const currentUser = await queryCurrent();
+      const currentUser = await Api.getInstance().getUserInfo(token);
       if (typeof currentUser === 'object' && currentUser) {
         if (currentUser.state === 200) {
-          return currentUser;
+          return currentUser.data;
         } else {
           message.error(currentUser.message);
         }
@@ -39,9 +39,10 @@ export async function getInitialState(): Promise<{
     }
     return undefined;
   };
-  // 如果是登录页面，不执行
+  // 只要不是登录页面,都要从服务器查询一下当前登录的用户信息,如果查询到,则把用户信息设置到全局状态管理中
   if (history.location.pathname !== '/user/login') {
-    const currentUser = await fetchUserInfo();
+    let token = localStorage.getItem('token') ?? '';
+    const currentUser = await fetchUserInfo(token);
     return {
       fetchUserInfo,
       currentUser,

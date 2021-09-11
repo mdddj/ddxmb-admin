@@ -3,17 +3,20 @@ import { Button, Input, Tag } from 'antd';
 import { CheckCircleFilled, PlusOutlined } from '@ant-design/icons';
 // @ts-ignore
 import { useRequest } from '@@/plugin-request/request';
-import { getBlogTags } from '@/services/blog';
+import Api from '@/utils/request';
 
 /**
  * 标签列表的编辑组件
  * @constructor
  */
-const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void, value: string[] }> = ({ onChange,value }) => {
+const TagListInputEdit: React.FC<{ onChange: (arr: string[]) => void; value: string[] }> = ({
+  onChange,
+  value,
+}) => {
   const [inputVisible, setInputVisible] = useState<boolean>(false);
   const [showServerTags, setShowServerTags] = useState<boolean>(false);
   const [inputValue, setInputValue] = useState<string>('');
-  const { loading, data } = useRequest(() => getBlogTags());
+  const { loading, data } = useRequest(() => Api.getInstance().getBlogTags());
 
   const showInput = () => {
     setInputVisible(true);

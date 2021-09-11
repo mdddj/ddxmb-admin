@@ -5,14 +5,13 @@ import styles from '../../style.less';
 import { Spacer } from '@geist-ui/react';
 import { Button, Card, Input, message, Modal } from 'antd';
 import BlogCategorys from '@/pages/Components/BlogCategorys';
-import { Category } from '@/services/models/BlogPushNewResultData';
 import TagListInputEdit from '@/pages/Components/TagListInput';
-import { getBlogDetailById } from '@/services/blog';
-import PushNewBlogParams from '@/services/models/PushNewBlogParamsModel';
 import { useLocation } from 'umi';
 import { useMount } from '@umijs/hooks';
 import { BlogObject } from '@/pages/Blog/components/list/DATA';
-import { blogApi } from '@/utils/request';
+import { Category } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
+import Api from '@/utils/request';
+import PushNewBlogParams from 'dd_server_api_web/apis/model/param/PushNewBlogParamsModel';
 
 export default (): React.ReactNode => {
   const [title, setTitle] = useState<string>('');
@@ -32,7 +31,7 @@ export default (): React.ReactNode => {
   useMount(async () => {
     console.log('组件 mount');
     if (id) {
-      const response = await getBlogDetailById(id);
+      const response = await Api.getInstance().getBlogDetailById(id);
       if (response.state === 200) {
         const blog = response.data as BlogObject;
         console.log(blog);
@@ -98,7 +97,7 @@ export default (): React.ReactNode => {
     if (id) {
       param.id = id;
     }
-    const result = await blogApi().pushNewBlog(param);
+    const result = await Api.getInstance().pushNewBlog(param);
     if (result.state == 200) {
       message.success(result.message);
     } else {

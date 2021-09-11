@@ -2,10 +2,10 @@ import React, { useCallback } from 'react';
 import { LogoutOutlined, SettingOutlined, UserOutlined } from '@ant-design/icons';
 import { Avatar, Menu, Spin } from 'antd';
 import { history, useModel } from 'umi';
-import { outLogin } from '@/services/login';
 import { stringify } from 'querystring';
 import HeaderDropdown from '../HeaderDropdown';
 import styles from './index.less';
+import Api from '@/utils/request';
 
 export type GlobalHeaderRightProps = {
   menu?: boolean;
@@ -15,7 +15,7 @@ export type GlobalHeaderRightProps = {
  * 退出登录，并且将当前的 url 保存
  */
 const loginOut = async () => {
-  await outLogin();
+  await Api.getInstance().logout();
   const { query, pathname } = history.location;
   const { redirect } = query as any;
   console.log(redirect);
@@ -68,7 +68,7 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
 
   const { currentUser } = initialState;
 
-  if (!currentUser || !currentUser.data.nickName) {
+  if (!currentUser || !currentUser.nickName) {
     return loading;
   }
 
@@ -97,13 +97,8 @@ const AvatarDropdown: React.FC<GlobalHeaderRightProps> = ({ menu }) => {
   return (
     <HeaderDropdown overlay={menuHeaderDropdown}>
       <span className={`${styles.action} ${styles.account}`}>
-        <Avatar
-          size="small"
-          className={styles.avatar}
-          src={currentUser.data.picture}
-          alt="avatar"
-        />
-        <span className={`${styles.name} anticon`}>{currentUser.data.nickName}</span>
+        <Avatar size="small" className={styles.avatar} src={currentUser.picture} alt="avatar" />
+        <span className={`${styles.name} anticon`}>{currentUser.nickName}</span>
       </span>
     </HeaderDropdown>
   );

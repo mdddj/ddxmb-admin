@@ -4,10 +4,10 @@ import { Button, Card, DatePicker, Form, Input } from 'antd';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import moment from 'moment';
 import { ResourceModel } from '@/entrys/ResourceModel';
-import { SaveOrUpdateResourcesModel } from '@/services/res_service';
-import { simpleHandleResultMessage } from '@/utils/result';
 import ResCategorySelect from '@/widgets/ResCategorySelect';
 import { ResCategory } from '@/entrys/ResCategory';
+import Api from '@/utils/request';
+import { simpleHandleResultMessage } from 'dd_server_api_web/apis/utils/ResultUtil';
 
 /**
  * 发布资源页面
@@ -24,7 +24,7 @@ const WriteResourcePage: React.FC = () => {
     if (category) {
       values.category = category;
     }
-    const result = await SaveOrUpdateResourcesModel(values);
+    const result = await Api.getInstance().saveOrUpdateResourcesModel(values);
     await simpleHandleResultMessage(result);
   };
 

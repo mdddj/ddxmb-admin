@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { Select } from 'antd';
-import { ResCategory } from '@/entrys/ResCategory';
-import { FindResCategoryListByNameLike } from '@/services/res_service';
-import { simpleHandleResultMessage } from '@/utils/result';
+import { ResCategory } from 'dd_server_api_web/apis/model/ResCategory';
+import { simpleHandleResultMessage } from 'dd_server_api_web/apis/utils/ResultUtil';
+import Api from '@/utils/request';
 
 const { Option } = Select;
 
@@ -14,11 +14,13 @@ const ResCategorySelect: React.FC<{
 
   // 执行搜索
   const handleSearch = async (value: string) => {
-    const result = await FindResCategoryListByNameLike(value);
+    const result = await Api.getInstance().findResCategoryListByNameLike(value);
     await simpleHandleResultMessage<ResCategory[]>(
       result,
       (data) => {
-        setValues(data);
+        if (data) {
+          setValues(data);
+        }
       },
       false,
     );

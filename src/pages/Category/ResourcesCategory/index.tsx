@@ -3,20 +3,16 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Avatar, Button, Card, Drawer, Form, Input, Popconfirm } from 'antd';
 import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
+import { useBoolean } from '@umijs/hooks';
+import MarkdownEditor from '@uiw/react-markdown-editor';
+import MarginRight from '@/widgets/MarginRight';
+import { ResCategory } from 'dd_server_api_web/apis/model/ResCategory';
+import Api from '@/utils/request';
 import {
   antdTableParamAsT,
   ParseResultToProTable,
   simpleHandleResultMessage,
-} from '@/utils/result';
-import { ResCategory } from '@/entrys/ResCategory';
-import {
-  DeleteResourceCategoryById,
-  GetResourceCategoryList,
-  SaveOrUpdateResourceCategory,
-} from '@/services/res_service';
-import { useBoolean } from '@umijs/hooks';
-import MarkdownEditor from '@uiw/react-markdown-editor';
-import MarginRight from '@/widgets/MarginRight';
+} from 'dd_server_api_web/apis/utils/ResultUtil';
 
 /// 列结构
 const columns = (
@@ -92,7 +88,10 @@ const ResourcesCategoryIndex: React.FC = () => {
   // 加载数据
   const fetchDataList = async (params: any, _: any, __: any) => {
     const param = coverAntdPageParamModelToRequestParam(params);
-    const result = await GetResourceCategoryList(param, antdTableParamAsT<ResCategory>(params));
+    const result = await Api.getInstance().getResourceCategoryList(
+      param,
+      antdTableParamAsT<ResCategory>(params),
+    );
     return ParseResultToProTable<ResCategory>(result);
   };
 
@@ -102,7 +101,7 @@ const ResourcesCategoryIndex: React.FC = () => {
     const object = values as ResCategory;
     object.description = markdown;
     if (updateResCategory) object.id = updateResCategory.id;
-    const result = await SaveOrUpdateResourceCategory(object);
+    const result = await Api.getInstance().saveOrUpdateResourceCategory(object);
     await simpleHandleResultMessage(result, () => {
       setFalse(); // 关闭抽屉
       tableRef?.current?.reload(); // 刷新表格
@@ -120,7 +119,7 @@ const ResourcesCategoryIndex: React.FC = () => {
 
   // 删除
   const onDelete = async (category: ResCategory) => {
-    const result = await DeleteResourceCategoryById(category);
+    const result = await Api.getInstance().deleteResourceCategoryById(category);
     await simpleHandleResultMessage(result, () => {
       tableRef?.current?.reload();
     });

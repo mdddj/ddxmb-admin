@@ -3,12 +3,12 @@ import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { TextModel } from '@/pages/Text/model';
 import { Card, Form, Input, Button, message, Drawer } from 'antd';
-import { getTextList, saveText } from '@/services/text';
-import { responseIsSuccess, simpleHandleResultMessage } from '@/utils/result';
 import { PlusOutlined } from '@ant-design/icons';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import MarkdownPreview from '@/widgets/MarkdownPreview';
+import Api from '@/utils/request';
+import { responseIsSuccess, successResultHandle } from 'dd_server_api_web/apis/utils/ResultUtil';
 
 const columns = (
   onEdit: (model: TextModel) => void,
@@ -61,12 +61,12 @@ const TextList: React.FC = () => {
   // 加载数据
   const fetchData = async (params: any, _: any, __: any) => {
     const name = params.name;
-    const result = await getTextList(params.current - 1, params.pageSize, name);
+    const result = await Api.getInstance().getTextList(params.current - 1, params.pageSize, name);
     return {
-      data: result.data.list,
+      data: result.data?.list,
       success: responseIsSuccess(result),
-      total: result.data.page.total,
-      current: result.data.page.currentPage,
+      total: result.data?.page.total,
+      current: result.data?.page.currentPage,
     };
   };
 
@@ -82,8 +82,8 @@ const TextList: React.FC = () => {
     if (editText) {
       text.id = editText.id;
     }
-    const result = await saveText(text);
-    await simpleHandleResultMessage<TextModel>(result, (_) => {
+    const result = await Api.getInstance().saveText(text);
+    successResultHandle(result, (_) => {
       setFalse();
       actionRef.current?.reload();
     });

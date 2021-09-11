@@ -1,26 +1,14 @@
 import { LockTwoTone, UserOutlined } from '@ant-design/icons';
-import { Alert, message as msg } from 'antd';
+import { message as msg } from 'antd';
 import React, { useState } from 'react';
 import ProForm, { ProFormText } from '@ant-design/pro-form';
 import { Link, history, useModel } from 'umi';
 import Footer from '@/components/Footer';
-import type { LoginParamsType } from '@/services/login';
-import { fakeAccountLogin } from '@/services/login';
 import styles from './index.less';
 import Title from 'antd/lib/typography/Title';
+import Api from '@/utils/request';
+import { successResultHandle } from 'dd_server_api_web/apis/utils/ResultUtil';
 
-const LoginMessage: React.FC<{
-  content?: string;
-}> = ({ content }) => (
-  <Alert
-    style={{
-      marginBottom: 24,
-    }}
-    message={content}
-    type="error"
-    showIcon
-  />
-);
 /**
  * 此方法会跳转到 redirect 参数所在的位置
  */
@@ -36,36 +24,44 @@ const goto = () => {
   }, 10);
 };
 
+type LoginFormType = {
+  loginNumber: string;
+  password: string;
+};
+
 const Login: React.FC = () => {
   const [submitting, setSubmitting] = useState(false);
-  const [userLoginState, setUserLoginState] = useState<API.LoginStateType>({});
   const { initialState, setInitialState } = useModel('@@initialState');
 
   // 加载用户信息
   const fetchUserInfo = async (token: string) => {
     console.log('正在请求用户信息' + token);
     localStorage.setItem('token', token);
-    const userInfo = await initialState?.fetchUserInfo?.();
+    const userInfo = await initialState?.fetchUserInfo?.(token);
 
     if (userInfo) {
       setInitialState({ ...initialState, currentUser: userInfo });
     }
   };
 
-  const handleSubmit = async (values: LoginParamsType) => {
+  const handleSubmit = async (values: LoginFormType) => {
     setSubmitting(true);
 
     try {
       // 登录
-      const res = await fakeAccountLogin({ ...values });
-      if (res.state === 200) {
-        msg.success('登录成功！');
-        await fetchUserInfo(res.data);
-        goto();
-        return;
-      } // 如果失败去设置用户错误信息
-
-      setUserLoginState(res);
+      const res = await Api.getInstance().login(values.loginNumber, values.password);
+      successResultHandle<string>(
+        res,
+        async (data) => {
+          msg.success('登录成功！');
+          await fetchUserInfo(data);
+          goto();
+          return;
+        },
+        (message) => {
+          msg.error(message);
+        },
+      );
     } catch (error) {
       msg.error('登录失败，请重试！');
     }
@@ -73,7 +69,6 @@ const Login: React.FC = () => {
     setSubmitting(false);
   };
 
-  const { state, message } = userLoginState;
   return (
     <>
       <div className={styles.container}>
@@ -107,12 +102,11 @@ const Login: React.FC = () => {
                 },
               }}
               onFinish={async (values) => {
-                await handleSubmit(values as LoginParamsType);
+                await handleSubmit(values as LoginFormType);
               }}
             >
               <Title level={1}>登录</Title>
 
-              {state && state !== 200 && <LoginMessage content={message} />}
               <>
                 <ProFormText
                   name="loginNumber"

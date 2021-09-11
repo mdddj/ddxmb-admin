@@ -1,21 +1,17 @@
 import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Category } from '@/services/models/BlogPushNewResultData';
-import {
-  DeleteBlogCategory,
-  GetCategoryForTableData,
-  SaveAndUpdateBlogCategory,
-} from '@/services/blog';
 import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
+import { Avatar, Button, DatePicker, Drawer, Form, Input } from 'antd';
+import { useBoolean } from '@umijs/hooks';
+import TextArea from 'antd/es/input/TextArea';
+import { Category } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
 import {
   antdTableParamAsT,
   ParseResultToProTable,
   simpleHandleResultMessage,
-} from '@/utils/result';
-import { Avatar, Button, DatePicker, Drawer, Form, Input } from 'antd';
-import { useBoolean } from '@umijs/hooks';
-import TextArea from 'antd/es/input/TextArea';
+} from 'dd_server_api_web/apis/utils/ResultUtil';
+import Api from '@/utils/request';
 
 // 表格列
 const columns = (): ProColumns<Category>[] => {
@@ -59,7 +55,7 @@ const BlogCategoryIndex: React.FC = ({}) => {
   // 加载数据
   const fetchData = async (params: any, _: any, __: any) => {
     return ParseResultToProTable<Category>(
-      await GetCategoryForTableData(
+      await Api.getInstance().getCategoryForTableData(
         coverAntdPageParamModelToRequestParam(params),
         antdTableParamAsT<Category>(params),
       ),
@@ -68,19 +64,19 @@ const BlogCategoryIndex: React.FC = ({}) => {
 
   // 编辑表格
   const onEditRow = async (key: any, data: Category, row: any) => {
-    const result = await SaveAndUpdateBlogCategory(data);
-    await simpleHandleResultMessage(result, undefined, false, action.current?.reload);
+    const result = await Api.getInstance().saveAndUpdateBlogCategory(data);
+    await simpleHandleResultMessage(result, undefined, false, (_) => action.current?.reload);
   };
 
   // 删除表格
   const onDelete = async (key: any) => {
-    const result = await DeleteBlogCategory(key as number);
-    await simpleHandleResultMessage(result, undefined, true, action.current?.reload);
+    const result = await Api.getInstance().deleteBlogCategory(key as number);
+    await simpleHandleResultMessage(result, undefined, true, (_) => action.current?.reload);
   };
 
   // 新增
   const addNew = async (values: Category) => {
-    const result = await SaveAndUpdateBlogCategory(values);
+    const result = await Api.getInstance().saveAndUpdateBlogCategory(values);
     await simpleHandleResultMessage(result, (data) => {
       setFalse();
       action.current?.reload();

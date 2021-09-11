@@ -1,19 +1,19 @@
 import * as React from 'react';
-import {PageContainer} from '@ant-design/pro-layout';
-import {Avatar, Card, message} from 'antd';
-import {getBlogList} from '@/pages/Blog/BlogService';
-import ProTable, {ProColumns} from '@ant-design/pro-table';
+import { PageContainer } from '@ant-design/pro-layout';
+import { Avatar, Card, message } from 'antd';
+import { getBlogList } from '@/pages/Blog/BlogService';
+import ProTable, { ProColumns } from '@ant-design/pro-table';
 import InputDailog from '@/pages/Components/inputdialog/InputDialog';
-import {useState} from 'react';
-import {Chip} from '@material-ui/core';
-import {BlogObject} from '@/pages/Blog/components/list/DATA';
-import {deleteBlog} from '@/services/blog';
-import {Link} from "umi";
+import { useState } from 'react';
+import { Chip } from '@material-ui/core';
+import { BlogObject } from '@/pages/Blog/components/list/DATA';
+import { Link } from 'umi';
+import Api from '@/utils/request';
 
 // 博客列表首页
 
 export default (): React.ReactNode => {
-  const [showDialog, setShowDialog] = useState<boolean>(false)
+  const [showDialog, setShowDialog] = useState<boolean>(false);
   const BlogTableColumn: ProColumns<BlogObject>[] = [
     {
       title: 'ID',
@@ -29,7 +29,7 @@ export default (): React.ReactNode => {
       render: (_, obj) => {
         return (
           <Chip
-            avatar={<Avatar alt="Natacha" src={obj.category.logo}/>}
+            avatar={<Avatar alt="Natacha" src={obj.category.logo} />}
             label={obj.category.name}
             variant="outlined"
           />
@@ -40,16 +40,22 @@ export default (): React.ReactNode => {
       title: '操作',
       valueType: 'option',
       render: (text, obj, _, action) => [
-        <Link key={'previewKey'} to={{
-          pathname: '/blog/preview',
-          search: '?id=' + obj.id
-        }}>预览</Link>,
-        <Link key={'editKey'} to={
-          {
+        <Link
+          key={'previewKey'}
+          to={{
+            pathname: '/blog/preview',
+            search: '?id=' + obj.id,
+          }}
+        >
+          预览
+        </Link>,
+        <Link
+          key={'editKey'}
+          to={{
             pathname: '/blog/write',
-            search: '?id=' + obj.id
-          }
-        }>
+            search: '?id=' + obj.id,
+          }}
+        >
           编辑
         </Link>,
         <a
@@ -70,7 +76,7 @@ export default (): React.ReactNode => {
   // 删除博客
   const deleteBlogFun = async (id: number) => {
     console.log('删除博客' + id);
-    await deleteBlog(id);
+    await Api.getInstance().deleteBlog(id);
     message.success('删除成功');
   };
 
@@ -86,7 +92,7 @@ export default (): React.ReactNode => {
                 page: params.current ?? 0,
                 pageSize: params.pageSize,
               });
-              return {data: data.data.list, success: data && data.state == 200};
+              return { data: data.data.list, success: data && data.state == 200 };
             }}
           />
 
@@ -96,15 +102,10 @@ export default (): React.ReactNode => {
             }}
             show={showDialog}
           />
-
         </Card>
 
-
         {/* 预览组件 */}
-
-
       </PageContainer>
-
     </>
   );
 };

@@ -1,8 +1,8 @@
 import React from 'react';
-import { getBlogCategorys } from '@/services/blog';
-import { Category } from '@/services/models/BlogPushNewResultData';
 import { Tag } from 'antd';
 import { useRequest } from '@umijs/hooks';
+import { Category } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
+import Api from '@/utils/request';
 
 /**
  * 博客分类组件
@@ -12,7 +12,7 @@ const BlogCategorys: React.FC<{
   onSelect: (item: Category) => void;
   current: Category | undefined;
 }> = (props) => {
-  const { data, loading, error } = useRequest(() => getBlogCategorys());
+  const { data, loading, error } = useRequest(() => Api.getInstance().getBlogCategorys());
 
   if (loading) {
     return <div>正在加载分类...</div>;

@@ -2,9 +2,6 @@ import { PageContainer } from '@ant-design/pro-layout';
 import React, { useState } from 'react';
 import { Breadcrumb, Button, Card, Col, message, Row } from 'antd';
 import { useMount } from '@umijs/hooks';
-import { CreateFolder, GetFilesWithFolderId, GetFolders } from '@/services/file_service';
-import { simpleHandleResultMessage } from '@/utils/result';
-import { ResCategory } from '@/entrys/ResCategory';
 import { FileInfo } from '@/entrys/FileInfo';
 import { Spacer } from '@geist-ui/react';
 import { CopyFilled, FileFilled, FolderFilled } from '@ant-design/icons';
@@ -12,6 +9,9 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { TextField } from '@material-ui/core';
 import { useRequest } from '@@/plugin-request/request';
+import Api from '@/utils/request';
+import { simpleHandleResultMessage } from 'dd_server_api_web/apis/utils/ResultUtil';
+import { ResCategory } from 'dd_server_api_web/apis/model/ResCategory';
 
 interface NavLink {
   id: number;
@@ -34,11 +34,11 @@ const FilesPage: React.FC = () => {
 
   /// 获取文件夹列表
   const getFolders = async (id?: number) => {
-    const result = await GetFolders(id);
+    const result = await Api.getInstance().getFolders(id);
     await simpleHandleResultMessage<ResCategory[]>(
       result,
       (data) => {
-        setFolders(data);
+        setFolders(data ?? []);
       },
       false,
     );
@@ -48,11 +48,11 @@ const FilesPage: React.FC = () => {
   const onSelect = async (item: ResCategory) => {
     setCueeFolder(item);
     await getFolders(item.id);
-    const result = await GetFilesWithFolderId(item.id, { page: 0, pageSize: 10 });
+    const result = await Api.getInstance().getFilesWithFolderId(item.id, { page: 0, pageSize: 10 });
     await simpleHandleResultMessage(
       result,
       (data) => {
-        setFiles(data.list);
+        setFiles(data!.list);
       },
       false,
     );
@@ -64,7 +64,7 @@ const FilesPage: React.FC = () => {
   };
 
   const createService = (name: string) => {
-    return CreateFolder(name, currFolder);
+    return Api.getInstance().createFolder(name, currFolder);
   };
 
   const { loading, run } = useRequest(createService, {

@@ -1,21 +1,16 @@
-import TaokeApi from 'dd_server_api/apis/taoke';
-import DdTaokeSdk from 'dd_server_api/apis';
-
-const host = 'https://itbug.shop';
-/**
- * 淘客api接口
- */
-export const taokeApi = (): TaokeApi => {
-  const api = TaokeApi.getInstance();
-  api.host = host;
-  return api;
-};
+import DdServerApiByWeb from 'dd_server_api_web/apis';
 
 /**
- * 博客api接口
+ * 接口方法
  */
-export const blogApi = (): DdTaokeSdk => {
-  const api = DdTaokeSdk.getInstance();
-  api.host = host;
-  return api;
-};
+class Api {
+  static host: string = 'https://itbug.shop';
+
+  static getInstance(): DdServerApiByWeb {
+    let api = DdServerApiByWeb.getInstance();
+    api.host = this.host;
+    return api;
+  }
+}
+
+export default Api;
