@@ -8,8 +8,10 @@ class Api {
   static host: string = 'http://localhost';
 
   static getInstance(): DdServerApiByWeb {
+    let token = localStorage.getItem('token') ?? undefined;
     let api = DdServerApiByWeb.getInstance();
     api.host = this.host;
+    api.token = token;
     return api;
   }
 }

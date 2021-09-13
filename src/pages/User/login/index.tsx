@@ -63,6 +63,7 @@ const Login: React.FC = () => {
         },
       );
     } catch (error) {
+      console.log(error);
       msg.error('登录失败，请重试！');
     }
 

@@ -8,7 +8,6 @@ import BlogCategorys from '@/pages/Components/BlogCategorys';
 import TagListInputEdit from '@/pages/Components/TagListInput';
 import { useLocation } from 'umi';
 import { useMount } from '@umijs/hooks';
-import { BlogObject } from '@/pages/Blog/components/list/DATA';
 import { Category } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
 import Api from '@/utils/request';
 import PushNewBlogParams from 'dd_server_api_web/apis/model/param/PushNewBlogParamsModel';
@@ -29,20 +28,20 @@ export default (): React.ReactNode => {
 
   // 组件渲染完毕生命周期
   useMount(async () => {
-    console.log('组件 mount');
     if (id) {
       const response = await Api.getInstance().getBlogDetailById(id);
       if (response.state === 200) {
-        const blog = response.data as BlogObject;
-        console.log(blog);
-        setMarkdown(blog.content);
-        setTitle(blog.title);
-        setAlias(blog.alias ?? '');
-        setThumbnail(blog.thumbnail ?? '');
-        setCategory(blog.category);
-        let tags = blog.tags;
-        const filterTag = tags.map<string>((value) => value.name) as string[];
-        setBlogTags(filterTag);
+        const blog = response.data;
+        if (blog) {
+          setMarkdown(blog.content);
+          setTitle(blog.title);
+          setAlias(blog.alias ?? '');
+          setThumbnail(blog.thumbnail ?? '');
+          setCategory(blog.category);
+          let tags = blog.tags;
+          const filterTag = tags.map<string>((value) => value.name) as string[];
+          setBlogTags(filterTag);
+        }
       }
     }
   });
@@ -97,7 +96,8 @@ export default (): React.ReactNode => {
     if (id) {
       param.id = id;
     }
-    const result = await Api.getInstance().pushNewBlog(param);
+    let api = Api.getInstance();
+    const result = await api.pushNewBlog(param);
     if (result.state == 200) {
       message.success(result.message);
     } else {
