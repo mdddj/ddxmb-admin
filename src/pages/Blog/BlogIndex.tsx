@@ -1,18 +1,24 @@
 import * as React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Avatar, Card, message } from 'antd';
+import { Avatar, Card, message, Modal } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import InputDailog from '@/pages/Components/inputdialog/InputDialog';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Chip } from '@material-ui/core';
 import { Link } from 'umi';
 import Api from '@/utils/request';
 import { BlogData } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
+import { ActionType } from '@ant-design/pro-table/lib/typing';
 
 // 博客列表首页
 
 export default (): React.ReactNode => {
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [deleId, setDeleId] = useState<number | undefined>(undefined);
+  const [deleIng, setDeleIng] = useState<boolean>(false);
+
+  const action = useRef<ActionType>();
   const BlogTableColumn: ProColumns<BlogData>[] = [
     {
       title: 'ID',
@@ -38,7 +44,7 @@ export default (): React.ReactNode => {
     {
       title: '操作',
       valueType: 'option',
-      render: (text, obj, _, action) => [
+      render: (text, obj, _, __) => [
         <Link
           key={'previewKey'}
           to={{
@@ -72,11 +78,23 @@ export default (): React.ReactNode => {
     },
   ];
 
-  // 删除博客
-  const deleteBlogFun = async (id: number) => {
-    console.log('删除博客' + id);
-    await Api.getInstance().deleteBlog(id);
+  // 显示删除博客的提示弹窗
+  const deleteBlogFun = (id: number) => {
+    setDeleId(id);
+    setShowDeleteModal(true);
+  };
+
+  //执行删除
+  const doDelete = async () => {
+    if (deleId) {
+      setDeleIng(true);
+      await Api.getInstance().deleteBlog(deleId);
+      setDeleIng(false);
+    }
     message.success('删除成功');
+    setDeleId(undefined);
+    setShowDeleteModal(false);
+    action?.current?.reload();
   };
 
   return (
@@ -84,6 +102,7 @@ export default (): React.ReactNode => {
       <PageContainer>
         <Card>
           <ProTable<BlogData>
+            actionRef={action}
             columns={BlogTableColumn}
             rowKey={'id'}
             request={async (params) => {
@@ -107,7 +126,17 @@ export default (): React.ReactNode => {
           />
         </Card>
 
-        {/* 预览组件 */}
+        {/* 删除弹窗 */}
+
+        <Modal
+          title={'确认删除博客吗'}
+          visible={showDeleteModal}
+          onCancel={() => setShowDeleteModal(false)}
+          onOk={doDelete}
+          confirmLoading={deleIng}
+        >
+          注意,删除后将无法恢复!
+        </Modal>
       </PageContainer>
     </>
   );
