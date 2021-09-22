@@ -54,16 +54,15 @@ const BlogCategoryIndex: React.FC = ({}) => {
 
   // 加载数据
   const fetchData = async (params: any, _: any, __: any) => {
+    const pager = coverAntdPageParamModelToRequestParam(params);
+    console.log(antdTableParamAsT<Category>(params));
     return ParseResultToProTable<Category>(
-      await Api.getInstance().getCategoryForTableData(
-        coverAntdPageParamModelToRequestParam(params),
-        antdTableParamAsT<Category>(params),
-      ),
+      await Api.getInstance().getCategoryForTableData(pager, antdTableParamAsT<Category>(params)),
     );
   };
 
   // 编辑表格
-  const onEditRow = async (key: any, data: Category, row: any) => {
+  const onEditRow = async (key: any, data: Category, _: any) => {
     const result = await Api.getInstance().saveAndUpdateBlogCategory(data);
     await simpleHandleResultMessage(result, undefined, false, (_) => action.current?.reload);
   };
@@ -77,7 +76,7 @@ const BlogCategoryIndex: React.FC = ({}) => {
   // 新增
   const addNew = async (values: Category) => {
     const result = await Api.getInstance().saveAndUpdateBlogCategory(values);
-    await simpleHandleResultMessage(result, (data) => {
+    await simpleHandleResultMessage(result, (_) => {
       setFalse();
       action.current?.reload();
     });
