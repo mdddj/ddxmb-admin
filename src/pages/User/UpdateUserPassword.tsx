@@ -1,5 +1,4 @@
 import { PageContainer } from '@ant-design/pro-layout';
-import { Form } from 'antd';
 import React from 'react';
 
 /**
@@ -7,11 +6,7 @@ import React from 'react';
  * @constructor
  */
 const UpdateUserPassword: React.FC = () => {
-  return (
-    <PageContainer>
-      <Form></Form>
-    </PageContainer>
-  );
+  return <PageContainer title={'个人设置'}></PageContainer>;
 };
 
 export default UpdateUserPassword;

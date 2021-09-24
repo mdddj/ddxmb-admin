@@ -1,5 +1,14 @@
 ﻿export default [
   {
+    path: '/account',
+    routes: [
+      {
+        path: '/account/settings',
+        component: './User/UpdateUserPassword',
+      },
+    ],
+  },
+  {
     path: '/user',
     layout: false,
     routes: [
@@ -20,6 +29,19 @@
     name: 'welcome',
     icon: 'smile',
     component: './Welcome',
+  },
+  {
+    path: '/users',
+    name: '用户管理',
+    icon: 'smile',
+    routes: [
+      {
+        path: '/users/list',
+        name: '用户列表',
+        icon: 'list',
+        component: './User/list/UserListView',
+      },
+    ],
   },
   {
     path: '/blog',

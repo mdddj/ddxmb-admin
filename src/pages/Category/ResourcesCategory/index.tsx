@@ -2,7 +2,6 @@ import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { Avatar, Button, Card, Drawer, Form, Input, Popconfirm } from 'antd';
-import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import MarginRight from '@/widgets/MarginRight';
@@ -13,6 +12,7 @@ import {
   ParseResultToProTable,
   simpleHandleResultMessage,
 } from 'dd_server_api_web/apis/utils/ResultUtil';
+import { coverAntdPageParamModelToRequestParam } from 'dd_server_api_web/apis/model/PageModel';
 
 /// 列结构
 const columns = (
@@ -120,7 +120,7 @@ const ResourcesCategoryIndex: React.FC = () => {
   // 删除
   const onDelete = async (category: ResCategory) => {
     const result = await Api.getInstance().deleteResourceCategoryById(category);
-    await simpleHandleResultMessage(result, () => {
+    await simpleHandleResultMessage<string>(result, () => {
       tableRef?.current?.reload();
     });
   };

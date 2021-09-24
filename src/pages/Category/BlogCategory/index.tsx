@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { coverAntdPageParamModelToRequestParam } from '@/entrys/PageModel';
 import { Avatar, Button, DatePicker, Drawer, Form, Input } from 'antd';
 import { useBoolean } from '@umijs/hooks';
 import TextArea from 'antd/es/input/TextArea';
@@ -12,6 +11,7 @@ import {
   simpleHandleResultMessage,
 } from 'dd_server_api_web/apis/utils/ResultUtil';
 import Api from '@/utils/request';
+import { coverAntdPageParamModelToRequestParam } from 'dd_server_api_web/apis/model/PageModel';
 
 // 表格列
 const columns = (): ProColumns<Category>[] => {
