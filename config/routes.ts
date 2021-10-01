@@ -41,6 +41,12 @@
         icon: 'list',
         component: './User/list/UserListView',
       },
+      {
+        path: '/users/add',
+        name: '添加新用户',
+        icon: 'list',
+        component: './User/list/AddNewUser',
+      },
     ],
   },
   {
