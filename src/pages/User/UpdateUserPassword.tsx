@@ -21,7 +21,6 @@ const UpdateUserPassword: React.FC = () => {
     initialState: { currentUser },
   } = useModel('@@initialState');
 
-  console.log(currentUser);
   /// 加载用户信息
   useMount(() => {
     form.setFieldsValue(currentUser);
