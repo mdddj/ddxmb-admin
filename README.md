@@ -1,6 +1,6 @@
 ### 典典的小卖部后台
 
-####1.关于
+#### 1.关于
 
 - 模板使用了阿里的 AntdPro5.0
 - 代码使用 Typescript 编写
@@ -8,7 +8,7 @@
 - 文件管理使用了阿里云 OSS
 - Token 鉴权使用 java shiro jwt
 
-####2.运行前配置在`src/utils/request.ts`文件中将https://itbug.shop这行注释掉
+#### 2.运行前配置在`src/utils/request.ts`文件中将https://itbug.shop这行注释掉
 
 ```typescript
 class Api {
@@ -25,7 +25,7 @@ class Api {
 }
 ```
 
-####3.运行需要安装 npm 或者 yarn
+#### 3.运行需要安装 npm 或者 yarn
 
 ```bash
 yarn
@@ -38,6 +38,6 @@ yarn start dev
 yarn build
 ```
 
-####4.预览
+#### 4.部分界面预览
 
 ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945394.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945240.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945412.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945283.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945329.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945406.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945381.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945422.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945403.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945398.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166952897.png)
