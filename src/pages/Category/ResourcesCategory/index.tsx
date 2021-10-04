@@ -1,7 +1,7 @@
 import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
-import { Avatar, Button, Card, Drawer, Form, Input, Popconfirm } from 'antd';
+import { Avatar, Button, Card, Drawer, Form, Input, Popconfirm, Space } from 'antd';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import MarginRight from '@/widgets/MarginRight';
@@ -194,13 +194,22 @@ const ResourcesCategoryIndex: React.FC = () => {
               <Input />
             </Form.Item>
 
-            <Button
-              onClick={() => {
-                form.setFieldsValue({ type: 'folder' });
-              }}
-            >
-              文件夹类型
-            </Button>
+            <Space>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({ type: 'folder' });
+                }}
+              >
+                文件夹类型
+              </Button>
+              <Button
+                onClick={() => {
+                  form.setFieldsValue({ type: 'images' });
+                }}
+              >
+                相册类型
+              </Button>
+            </Space>
 
             <Form.Item label={'介绍'}>
               <MarkdownEditor
