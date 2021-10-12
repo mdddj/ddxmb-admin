@@ -134,6 +134,19 @@
     ],
   },
   {
+    path: '/order',
+    name: '订单管理',
+    icon: 'preview',
+    routes: [
+      {
+        path: '/order/select',
+        name: '订单查询',
+        icon: 'applications',
+        component: './Select/select',
+      },
+    ],
+  },
+  {
     path: '/app',
     name: '应用管理',
     icon: 'AppstoreOutlined',
