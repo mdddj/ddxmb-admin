@@ -1,4 +1,5 @@
 import DdServerApiByWeb from 'dd_server_api_web/apis';
+import TaokeApi from 'dd_server_api_web/apis/taoke';
 
 /**
  * 接口方法
@@ -12,6 +13,12 @@ class Api {
     let api = DdServerApiByWeb.getInstance();
     api.host = this.host;
     api.token = token;
+    return api;
+  }
+
+  static taokeApi(): TaokeApi {
+    let api = TaokeApi.getInstance();
+    api.host = this.host;
     return api;
   }
 }

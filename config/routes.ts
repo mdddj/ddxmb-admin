@@ -136,13 +136,13 @@
   {
     path: '/order',
     name: '订单管理',
-    icon: 'preview',
+    icon: 'OrderedListOutlined',
     routes: [
       {
         path: '/order/select',
         name: '订单查询',
         icon: 'applications',
-        component: './Select/select',
+        component: './Order/select',
       },
     ],
   },
