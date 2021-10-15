@@ -11,8 +11,9 @@ import {
 import '@ant-design/pro-form/dist/form.css';
 import { Button, message, Space } from 'antd';
 import Api from '@/utils/request';
+import { Order } from '@/entrys/Order';
 
-const OrderSearchForm: React.FC<{ result: (data: any) => void }> = ({ result }) => {
+const OrderSearchForm: React.FC<{ result: (data: Order[]) => void }> = ({ result }) => {
   // 绑定一个 ProFormInstance 实例
   const formRef = useRef<ProFormInstance<any>>();
 
@@ -95,8 +96,11 @@ const OrderSearchForm: React.FC<{ result: (data: any) => void }> = ({ result }) 
               value.startTime = time[0];
               value.endTime = time[1];
               delete value.time;
-              const result = await Api.taokeApi().getTaobaoOrder(value);
-              console.log(result);
+              const response = (await Api.taokeApi().getTaobaoOrder(value)) as any;
+              const list = response.tbk_order_details_get_response.data.results.publisher_order_dto;
+              if (list) {
+                result(list as Order[]);
+              }
             });
           }}
         >
@@ -108,6 +112,16 @@ const OrderSearchForm: React.FC<{ result: (data: any) => void }> = ({ result }) 
           }}
         >
           重置
+        </Button>
+
+        <Button
+          onClick={() => {
+            formRef.current?.setFieldsValue({
+              time: ['2021-10-11 21:48:01', '2021-10-11 22:22:00'],
+            });
+          }}
+        >
+          测试时间
         </Button>
       </Space>
     </div>
