@@ -36,7 +36,13 @@ const columns = (
     ellipsis: true,
     search: false,
   },
-
+  {
+    title: '加密',
+    dataIndex: 'isEncryptionText',
+    render: (_, record) => (
+      <Checkbox checked={record.isEncryptionText} disabled={!record.isEncryptionText} />
+    ),
+  },
   {
     title: '操作',
     valueType: 'option',
@@ -98,6 +104,7 @@ const TextList: React.FC = () => {
       (_) => {
         setFalse();
         actionRef.current?.reload();
+        message.success(result.message);
       },
       message.error,
     );
