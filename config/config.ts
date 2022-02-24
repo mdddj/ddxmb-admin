@@ -35,10 +35,10 @@ export default defineConfig({
   theme: {
     'primary-color': defaultSettings.primaryColor,
   },
-  esbuild: {},
+  // esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy.pro,
+  proxy: proxy.dev,
   manifest: {
     basePath: '/',
   },
