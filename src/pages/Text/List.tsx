@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { TextModel } from '@/pages/Text/model';
-import { Card, Form, Input, Button, message, Drawer } from 'antd';
+import { Card, Form, Input, Button, message, Drawer, Switch, Checkbox } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
@@ -144,6 +144,21 @@ const TextList: React.FC = () => {
             <Input />
           </Form.Item>
           <Form.Item label="备注" name="intro" initialValue={editText?.intro}>
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="isEncryptionText"
+            valuePropName="checked"
+            tooltip={'如果开启这个设置,则需要输入解密的密码'}
+          >
+            <Checkbox>加密内容</Checkbox>
+          </Form.Item>
+
+          <Form.Item
+            label="密码"
+            name={'viewPassword'}
+            tooltip={'如果开启了加密的选项,则这个是必填项'}
+          >
             <Input />
           </Form.Item>
           <Form.Item label={'正文'}>
