@@ -1,11 +1,7 @@
 import React, { useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card, CardContent, Fade, Typography } from '@material-ui/core';
-import { Alert, Input, message, Upload } from 'antd';
-import { SaveOutlined, UploadOutlined } from '@ant-design/icons';
-import { Spacer } from '@geist-ui/react';
+import { Alert, Button, Card, Input, message, Typography, Upload } from 'antd';
 import { RcFile } from 'antd/lib/upload/interface';
-import Button from '@material-ui/core/Button';
 import { fileSizeCover } from '@/utils/utils';
 import styles from './index.less';
 import request from 'umi-request';
@@ -44,57 +40,43 @@ const ApkVersionManage: React.FC = () => {
       <PageContainer title={'上传新版本'}>
         {/*  选择文件按钮 */}
         <Card>
-          <CardContent>
-            <Typography component={'h1'}>选择APK文件</Typography>
+          <Typography>选择APK文件</Typography>
 
-            <Spacer />
-            <Upload beforeUpload={beforeUpload}>
-              <Button startIcon={<UploadOutlined />}>选择APK文件</Button>
-            </Upload>
+          <Upload beforeUpload={beforeUpload}>
+            <Button>选择APK文件</Button>
+          </Upload>
 
-            {apkFile ? (
-              <div className={styles.fileSizeContaner}>
-                <span>文件大小:{fileSizeCover(apkFile.size)}</span>
-              </div>
-            ) : (
-              <span />
-            )}
-          </CardContent>
+          {apkFile ? (
+            <div className={styles.fileSizeContaner}>
+              <span>文件大小:{fileSizeCover(apkFile.size)}</span>
+            </div>
+          ) : (
+            <span />
+          )}
         </Card>
-
-        <Spacer />
 
         {/*版本号输入框*/}
         <Card>
-          <CardContent>
-            <Typography component={'h1'}>请输入版本号</Typography>
-            <Spacer />
-            <Input
-              placeholder="例子: 1.0.0"
-              onChange={(event) => {
-                setVersion(event.target.value);
-              }}
-            />
-          </CardContent>
+          <Typography>请输入版本号</Typography>
+          <Input
+            placeholder="例子: 1.0.0"
+            onChange={(event) => {
+              setVersion(event.target.value);
+            }}
+          />
         </Card>
 
         {/*  提交 */}
-        <Spacer />
         <Button
           color="primary"
           size="large"
-          variant="contained"
-          startIcon={<SaveOutlined />}
           disabled={!apkFile || !version || version == ''}
           onClick={submit}
         >
           提交
         </Button>
 
-        <Spacer />
-        <Fade in={downUrl != ''}>
-          <Alert type={'success'} message={'上传成功:' + downUrl} />
-        </Fade>
+        <Alert type={'success'} message={'上传成功:' + downUrl} />
       </PageContainer>
     </>
   );

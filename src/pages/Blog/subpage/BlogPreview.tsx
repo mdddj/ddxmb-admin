@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
-import { Card } from '@geist-ui/react';
 import ReactMarkdown from 'react-markdown';
 import { Link, useLocation } from 'umi';
 import remarkGfm from 'remark-gfm';
@@ -13,6 +12,7 @@ import { vs } from 'react-syntax-highlighter/dist/esm/styles/prism';
 import Title from 'antd/lib/typography/Title';
 import 'github-markdown-css/github-markdown.css';
 import Api from '@/utils/request';
+import { Card } from 'antd';
 
 /**
  * 博客预览组件

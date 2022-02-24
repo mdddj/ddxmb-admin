@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import MarkdownEditor from '@uiw/react-markdown-editor';
 import { PageContainer } from '@ant-design/pro-layout';
 import styles from '../../style.less';
-import { Spacer } from '@geist-ui/react';
 import { Button, Card, Input, message, Modal } from 'antd';
 import BlogCategorys from '@/pages/Components/BlogCategorys';
 import TagListInputEdit from '@/pages/Components/TagListInput';
@@ -113,7 +112,6 @@ export default (): React.ReactNode => {
             <span>文章标题</span>
             <Input id="blog-title" placeholder="文章标题" value={title} onChange={titleChanged} />
 
-            <Spacer />
             <span>正文内容</span>
 
             <MarkdownEditor
@@ -122,7 +120,6 @@ export default (): React.ReactNode => {
               onChange={(editor: any, data: any, value: string) => setMarkdown(value)}
             />
 
-            <Spacer />
             <span>选择分类</span>
             <BlogCategorys
               current={category}
@@ -131,11 +128,9 @@ export default (): React.ReactNode => {
               }}
             />
 
-            <Spacer />
             <span>添加文章标签</span>
             <TagListInputEdit onChange={tagsChanged} value={blogTags} />
 
-            <Spacer />
             <Button type="primary" onClick={submit}>
               立即发布
             </Button>
@@ -157,7 +152,6 @@ export default (): React.ReactNode => {
             setThumbnail(event.target.value);
           }}
         />
-        <Spacer />
         <Input
           placeholder={'设置文字快速访问关键字(选填)'}
           onChange={(event) => {

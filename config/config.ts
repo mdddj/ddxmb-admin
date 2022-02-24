@@ -1,8 +1,11 @@
 // https://umijs.org/config/
 import { defineConfig } from 'umi';
+
 import defaultSettings from './defaultSettings';
 import proxy from './proxy';
 import routes from './routes';
+
+const { REACT_APP_ENV } = process.env;
 
 export default defineConfig({
   hash: true,
@@ -11,11 +14,12 @@ export default defineConfig({
     hmr: true,
   },
   layout: {
-    name: '典典的小卖部',
-    locale: false,
+    // https://umijs.org/zh-CN/plugins/plugin-layout
+    locale: true,
     siderWidth: 208,
     ...defaultSettings,
   },
+  // https://umijs.org/zh-CN/plugins/plugin-locale
   locale: {
     // default zh-CN
     default: 'zh-CN',
@@ -33,13 +37,21 @@ export default defineConfig({
   routes,
   // Theme for antd: https://ant.design/docs/react/customize-theme-cn
   theme: {
-    'primary-color': defaultSettings.primaryColor,
+    'root-entry-name': 'variable',
   },
-  // esbuild: {},
+  // esbuild is father build tools
+  // https://umijs.org/plugins/plugin-esbuild
+  esbuild: {},
   title: false,
   ignoreMomentLocale: true,
-  proxy: proxy.dev,
+  proxy: proxy[REACT_APP_ENV || 'dev'],
   manifest: {
     basePath: '/',
   },
+  // Fast Refresh 热更新
+  fastRefresh: {},
+  nodeModulesTransform: { type: 'none' },
+  mfsu: {},
+  webpack5: {},
+  exportStatic: {},
 });

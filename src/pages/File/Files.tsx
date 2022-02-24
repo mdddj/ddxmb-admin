@@ -1,13 +1,9 @@
 import { PageContainer } from '@ant-design/pro-layout';
 import React, { useState } from 'react';
-import { Breadcrumb, Button, Card, Col, message, Row } from 'antd';
+import { Breadcrumb, Button, Card, Col, Input, Modal, Row } from 'antd';
 import { useMount } from '@umijs/hooks';
 import { FileInfo } from '@/entrys/FileInfo';
-import { Spacer } from '@geist-ui/react';
-import { CopyFilled, FileFilled, FolderFilled } from '@ant-design/icons';
-import { CopyToClipboard } from 'react-copy-to-clipboard';
-import { Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
-import { TextField } from '@material-ui/core';
+import { FileFilled, FolderFilled } from '@ant-design/icons';
 import { useRequest } from '@@/plugin-request/request';
 import Api from '@/utils/request';
 import { simpleHandleResultMessage } from 'dd_server_api_web/apis/utils/ResultUtil';
@@ -108,8 +104,6 @@ const FilesPage: React.FC = () => {
         )}
       </Card>
 
-      <Spacer />
-
       <Row gutter={12}>
         {folders.map((item) => (
           <Col span={4} key={item.id}>
@@ -126,40 +120,27 @@ const FilesPage: React.FC = () => {
           <Col span={4} key={item.id}>
             <Card hoverable={true}>
               <FileFilled style={{ fontSize: 40, color: 'gray' }} />
-              <div>
-                {item.fileName}
-                <CopyToClipboard text={item.url} onCopy={() => message.success('复制url成功')}>
-                  <CopyFilled />
-                </CopyToClipboard>
-              </div>
+              <div>{item.fileName}</div>
             </Card>
           </Col>
         ))}
       </Row>
 
       {/*  创建文件夹弹窗 */}
-      <Dialog open={open} onClose={() => setOpen(false)} maxWidth={'md'}>
-        <DialogTitle>创建文件夹</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            id="name"
-            label="文件夹名称"
-            value={createFolderName}
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(event) => setCreateFolderName(event.target.value)}
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)}>取消</Button>
-          <Button onClick={createFolder} type={'primary'} loading={loading}>
-            创建
-          </Button>
-        </DialogActions>
-      </Dialog>
+      <Modal visible={open} onCancel={() => setOpen(false)}>
+        <h1>创建文件夹</h1>
+        <Input
+          autoFocus
+          id="name"
+          value={createFolderName}
+          type="text"
+          onChange={(event) => setCreateFolderName(event.target.value)}
+        />
+        <Button onClick={() => setOpen(false)}>取消</Button>
+        <Button onClick={createFolder} type={'primary'} loading={loading}>
+          创建
+        </Button>
+      </Modal>
     </PageContainer>
   );
 };

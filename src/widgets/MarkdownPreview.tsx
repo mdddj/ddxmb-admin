@@ -1,7 +1,7 @@
 import React from 'react';
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle } from '@material-ui/core';
 import { useBoolean } from '@umijs/hooks';
 import { BlogPreview } from '@/pages/Blog/subpage/BlogPreview';
+import { Modal } from 'antd';
 
 const MarkdownPreview: React.FC<{ content: string; onClose: () => void }> = ({
   content,
@@ -16,15 +16,16 @@ const MarkdownPreview: React.FC<{ content: string; onClose: () => void }> = ({
   }
 
   return (
-    <Dialog open={state} onClose={setFalse} fullWidth={true} maxWidth={'md'}>
-      <DialogTitle>预览</DialogTitle>
-      <DialogContent>
-        <BlogPreview content={content} />
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={onClose}>关闭</Button>
-      </DialogActions>
-    </Dialog>
+    <Modal
+      visible={state}
+      onCancel={() => {
+        setFalse();
+        onClose();
+      }}
+      width={'md'}
+    >
+      <BlogPreview content={content} />
+    </Modal>
   );
 };
 export default MarkdownPreview;

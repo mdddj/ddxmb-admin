@@ -41,3 +41,14 @@ yarn build
 #### 4.部分界面预览
 
 ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945394.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945240.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945412.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945283.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945329.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945406.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945381.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945422.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945403.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166945398.png) ![](https://static.saintic.com/picbed/huang/2021/10/02/1633166952897.png)
+
+# 升级 package 依赖包命令
+
+```
+1. npm install -g npm-check-updates
+
+2. ncu
+
+3. ncu -u
+
+```

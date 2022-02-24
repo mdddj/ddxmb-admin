@@ -4,7 +4,6 @@ import { Avatar, Card, message, Modal } from 'antd';
 import ProTable, { ProColumns } from '@ant-design/pro-table';
 import InputDailog from '@/pages/Components/inputdialog/InputDialog';
 import { useRef, useState } from 'react';
-import { Chip } from '@material-ui/core';
 import { Link } from 'umi';
 import Api from '@/utils/request';
 import { BlogData } from 'dd_server_api_web/apis/model/result/BlogPushNewResultData';
@@ -32,13 +31,7 @@ export default (): React.ReactNode => {
       title: '分类',
       dataIndex: 'category',
       render: (_, obj) => {
-        return (
-          <Chip
-            avatar={<Avatar alt="Natacha" src={obj.category.logo} />}
-            label={obj.category.name}
-            variant="outlined"
-          />
-        );
+        return <Avatar src={obj.category.logo} />;
       },
     },
     {
