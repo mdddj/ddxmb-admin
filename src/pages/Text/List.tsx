@@ -2,7 +2,7 @@ import React, { useRef, useState } from 'react';
 import { PageContainer } from '@ant-design/pro-layout';
 import ProTable, { ActionType, ProColumns } from '@ant-design/pro-table';
 import { TextModel } from '@/pages/Text/model';
-import { Card, Form, Input, Button, message, Drawer, Switch, Checkbox } from 'antd';
+import { Card, Form, Input, Button, message, Drawer, Checkbox, Modal } from 'antd';
 import { PlusOutlined } from '@ant-design/icons';
 import { useBoolean } from '@umijs/hooks';
 import MarkdownEditor from '@uiw/react-markdown-editor';
@@ -13,6 +13,7 @@ import { responseIsSuccess, successResultHandle } from 'dd_server_api_web/apis/u
 const columns = (
   onEdit: (model: TextModel) => void,
   onPreview?: (model: TextModel) => void,
+  onSelectOriginPassword?: (model: TextModel) => void,
 ): ProColumns<TextModel>[] => [
   {
     title: '关键字',
@@ -35,6 +36,7 @@ const columns = (
     ellipsis: true,
     search: false,
   },
+
   {
     title: '操作',
     valueType: 'option',
@@ -44,6 +46,14 @@ const columns = (
       </a>,
       <a target="_blank" rel="noopener noreferrer" key="view" onClick={() => onPreview?.(record)}>
         查看
+      </a>,
+      <a
+        target="_blank"
+        rel="noopener noreferrer"
+        key="view"
+        onClick={() => onSelectOriginPassword?.(record)}
+      >
+        原始密码
       </a>,
     ],
   },
@@ -83,10 +93,14 @@ const TextList: React.FC = () => {
       text.id = editText.id;
     }
     const result = await Api.getInstance().saveText(text);
-    successResultHandle(result, (_) => {
-      setFalse();
-      actionRef.current?.reload();
-    });
+    successResultHandle(
+      result,
+      (_) => {
+        setFalse();
+        actionRef.current?.reload();
+      },
+      message.error,
+    );
   };
 
   // 正文内容被改变
@@ -107,13 +121,28 @@ const TextList: React.FC = () => {
     setPreviewContent(text.context);
   };
 
+  // 查询原始密码
+  const onSelectOriginPassword = (text: TextModel) => {
+    Api.getInstance()
+      .adminSelectTextOriginPassword(text.name)
+      .then((v) => {
+        successResultHandle(
+          v,
+          (d) => {
+            Modal.success({ content: d });
+          },
+          message.error,
+        );
+      });
+  };
+
   return (
     <PageContainer title={'字典列表'}>
       <Card>
         <ProTable<TextModel>
           actionRef={actionRef}
           rowKey={'id'}
-          columns={columns(onEdit, onPreview)}
+          columns={columns(onEdit, onPreview, onSelectOriginPassword)}
           request={fetchData}
           pagination={{ pageSize: 10 }}
           toolBarRender={() => [
