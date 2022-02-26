@@ -4,7 +4,7 @@ import { getApplicationList } from '@/pages/Application/service';
 import { DtkDetail } from '@/pages/Application/model/list_result_model';
 import { Avatar, Card } from 'antd';
 import { useRequest } from '@umijs/hooks';
-import { Result } from '@/utils/result';
+import { Result } from 'dd_server_api_web/apis/utils/ResultUtil';
 
 export default (): React.ReactNode => {
   const { data, error, loading } = useRequest<Result<DtkDetail[]>>(() => {
