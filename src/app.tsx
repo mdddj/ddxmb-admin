@@ -20,12 +20,12 @@ export const initialStateConfig = {
 
 export async function getInitialState(): Promise<{
   settings?: LayoutSettings;
-  currentUser?: User;
-  userToken?: String;
+  currentUser: User | undefined;
   fetchUserInfo?: (token: string) => Promise<User | undefined>;
 }> {
-  const fetchUserInfo = async (token: string): Promise<User | undefined> => {
+  const fetchUserInfo = async (): Promise<User | undefined> => {
     try {
+      let token = localStorage.getItem('token') ?? '';
       const currentUser = await Api.getInstance().getUserInfo(token);
       if (typeof currentUser === 'object' && currentUser) {
         if (currentUser.state === 200) {
@@ -42,8 +42,7 @@ export async function getInitialState(): Promise<{
   };
   // 只要不是登录页面,都要从服务器查询一下当前登录的用户信息,如果查询到,则把用户信息设置到全局状态管理中
   if (history.location.pathname !== '/user/login') {
-    let token = localStorage.getItem('token') ?? '';
-    const currentUser = await fetchUserInfo(token);
+    const currentUser = await fetchUserInfo();
     return {
       fetchUserInfo,
       currentUser,
@@ -51,6 +50,7 @@ export async function getInitialState(): Promise<{
     };
   }
   return {
+    currentUser: undefined,
     fetchUserInfo,
     settings: defaultSettings,
   };

@@ -17,10 +17,9 @@ const { TabPane } = Tabs;
 const UpdateUserPassword: React.FC = () => {
   const [form] = Form.useForm();
 
-  const {
-    initialState: { currentUser },
-  } = useModel('@@initialState');
+  const { initialState } = useModel('@@initialState');
 
+  const currentUser = initialState && initialState.currentUser;
   /// 加载用户信息
   useMount(() => {
     form.setFieldsValue(currentUser);
@@ -33,11 +32,11 @@ const UpdateUserPassword: React.FC = () => {
     if (ava) {
       values.picture = ava.url;
     }
-    values.id = currentUser.id;
+    values.id = currentUser?.id;
     const result = await Api.getInstance().updateUserProfile(values as User);
     successResultHandle<User | undefined>(
       result,
-      (data) => {
+      (_) => {
         message.success('修改资料成功');
       },
       (msg) => {
@@ -80,7 +79,7 @@ const UpdateUserPassword: React.FC = () => {
             </Row>
           </TabPane>
           <TabPane tab="修改密码" key="2">
-            Content of Tab Pane 2
+            <UpdatePasswordForm />
           </TabPane>
           <TabPane tab="高级设置" key="3">
             Content of Tab Pane 3
@@ -88,6 +87,32 @@ const UpdateUserPassword: React.FC = () => {
         </Tabs>
       </Card>
     </PageContainer>
+  );
+};
+
+///修改密码的输入框
+const UpdatePasswordForm: React.FC = () => {
+  ///提交修改
+  const submitPass = (values: any) => {
+    console.log(values);
+  };
+  return (
+    <>
+      <Form onFinish={submitPass}>
+        <Form.Item required={true} label={'旧密码'} name={'oldPassword'}>
+          <Input />
+        </Form.Item>
+        <Form.Item required={true} label={'新密码'} name={'newPassword'}>
+          <Input />
+        </Form.Item>
+        <Form.Item required={true} label={'确认新密码'} name={'newPassword2'}>
+          <Input />
+        </Form.Item>
+        <Form.Item>
+          <Button htmlType={'submit'}>确认修改</Button>
+        </Form.Item>
+      </Form>
+    </>
   );
 };
 

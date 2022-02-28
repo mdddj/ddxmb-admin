@@ -5,8 +5,8 @@ import TaokeApi from 'dd_server_api_web/apis/taoke';
  * 接口方法
  */
 class Api {
-  // static host: string = 'https://itbug.shop';
-  static host: string = 'http://localhost';
+  static isLocal: boolean = true;
+  static host: string = Api.isLocal ? 'http://localhost' : 'https://itbug.shop';
 
   static getInstance(): DdServerApiByWeb {
     let token = localStorage.getItem('token') ?? undefined;
