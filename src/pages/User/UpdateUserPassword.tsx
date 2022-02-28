@@ -92,21 +92,77 @@ const UpdateUserPassword: React.FC = () => {
 
 ///修改密码的输入框
 const UpdatePasswordForm: React.FC = () => {
+  const [form] = Form.useForm();
   ///提交修改
   const submitPass = (values: any) => {
     console.log(values);
+    Api.getInstance()
+      .updateUserPasswordWithAdmin(values.oldPassword, values.newPassword)
+      .then((value) => {
+        successResultHandle(value, message.success, message.error);
+      });
   };
   return (
     <>
-      <Form onFinish={submitPass}>
+      <Form onFinish={submitPass} layout={'vertical'} form={form}>
         <Form.Item required={true} label={'旧密码'} name={'oldPassword'}>
-          <Input />
+          <Input type={'password'} />
         </Form.Item>
-        <Form.Item required={true} label={'新密码'} name={'newPassword'}>
-          <Input />
+        <Form.Item
+          label={'新密码'}
+          name={'newPassword'}
+          rules={[
+            {
+              required: true,
+              message: '请输入新密码',
+            },
+            {
+              min: 6,
+              message: '密码不能少于6位字符',
+            },
+            {
+              max: 20,
+              message: '密码不能超过20字符',
+            },
+            {
+              validator: (_, value, callback) => {
+                let oldPass = form.getFieldValue('oldPassword');
+                if (oldPass === value) {
+                  callback('新密码不能和旧密码一致,请重新输入');
+                } else {
+                  callback(undefined);
+                }
+              },
+            },
+          ]}
+        >
+          <Input type={'password'} />
         </Form.Item>
-        <Form.Item required={true} label={'确认新密码'} name={'newPassword2'}>
-          <Input />
+        <Form.Item
+          label={'确认新密码'}
+          name={'newPassword2'}
+          rules={[
+            {
+              required: true,
+              message: '请输入确认新密码',
+            },
+            {
+              validator: (_, value, callback) => {
+                let newPass = form.getFieldValue('newPassword');
+                if (value != newPass) {
+                  callback('两次密码不一致,请重新输入');
+                } else {
+                  callback(undefined);
+                }
+              },
+            },
+            {
+              min: 6,
+              message: '密码不能少于6位字符',
+            },
+          ]}
+        >
+          <Input type={'password'} />
         </Form.Item>
         <Form.Item>
           <Button htmlType={'submit'}>确认修改</Button>

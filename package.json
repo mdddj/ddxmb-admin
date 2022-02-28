@@ -30,7 +30,9 @@
     "test": "umi test",
     "test:all": "node ./tests/run-tests.js",
     "test:component": "umi test ./src/components",
-    "tsc": "tsc --noEmit"
+    "tsc": "tsc --noEmit",
+    "u": "ncu",
+    "ud": "ncu -u && yarn"
   },
   "lint-staged": {
     "**/*.less": "stylelint --syntax less",
@@ -57,7 +59,7 @@
     "@umijs/route-utils": "^2.0.5",
     "antd": "^4.18.8",
     "classnames": "^2.3.1",
-    "dd_server_api_web": "^1.7.7",
+    "dd_server_api_web": "^1.7.8",
 
     "github-markdown-css": "^5.1.0",
     "lodash": "^4.17.21",
@@ -103,7 +105,7 @@
     "enzyme": "^3.11.0",
     "eslint": "^8.10.0",
     "eslint-plugin-jest": "^26.1.1",
-    "eslint-plugin-react": "^7.29.1",
+    "eslint-plugin-react": "^7.29.2",
     "eslint-plugin-react-hooks": "^4.3.0",
     "eslint-plugin-unicorn": "^41.0.0",
     "express": "^4.17.3",
